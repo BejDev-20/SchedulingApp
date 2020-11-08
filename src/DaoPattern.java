@@ -1,3 +1,4 @@
+import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -12,7 +13,7 @@ import java.util.Scanner;
 
 import static javafx.application.Application.launch;
 
-public class DaoPattern {
+public class DaoPattern extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
