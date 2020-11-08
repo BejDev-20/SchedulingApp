@@ -1,3 +1,4 @@
+import DAO.CustomerDao;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -23,7 +24,9 @@ public class DAOMain extends Application {
 
 
     public static void main(String[] args) throws SQLException {
-        Connection conn = DBConnection.startConnection();
+        CustomerDao c = new CustomerDao();
+        System.out.println(c.getAll());
+        /*Connection conn = DBConnection.startConnection();
         String insertStatement = "INSERT INTO countries(Country, Create_Date, Created_By, Last_Updated_By) " +
                                  "VALUES(?, ?, ?, ?)";
         DBQuery.setPreparedStatement(conn, insertStatement);
@@ -42,6 +45,6 @@ public class DAOMain extends Application {
 
         ps.execute();
         launch(args);
-        DBConnection.closeConnection();
+        DBConnection.closeConnection();*/
     }
 }

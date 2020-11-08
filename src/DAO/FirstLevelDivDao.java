@@ -1,5 +1,6 @@
 package DAO;
 
+import javafx.collections.ObservableList;
 import model.FirstLevelDiv;
 
 import java.util.List;
@@ -7,7 +8,7 @@ import java.util.List;
 public class FirstLevelDivDao implements DAO<FirstLevelDiv> {
 
     @Override
-    public List<FirstLevelDiv> getAll() {
+    public ObservableList<FirstLevelDiv> getAll() {
         return null;
     }
 

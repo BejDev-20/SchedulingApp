@@ -12,13 +12,12 @@ public class Appointment {
     private String type;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private User createdBy;
     private int customerId;
     private int userId;
     private int contactId;
 
-    public Appointment(int appointmentId, String title, String description, String location, String type, LocalDateTime startTime, LocalDateTime endTime, User createdBy,
-                       int customerId, int userId, int contactId) {
+    public Appointment(int appointmentId, String title, String description, String location, String type,
+                       LocalDateTime startTime, LocalDateTime endTime, int customerId, int userId) {
         this.appointmentId = appointmentId;
         this.title = title;
         this.description = description;
@@ -26,10 +25,8 @@ public class Appointment {
         this.type = type;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.createdBy = createdBy;
         this.customerId = customerId;
         this.userId = userId;
-        this.contactId = contactId;
     }
 
 
@@ -71,14 +68,6 @@ public class Appointment {
 
     public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
-    }
-
-    public User getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(User createdBy) {
-        this.createdBy = createdBy;
     }
 
     public int getCustomer() {

@@ -1,13 +1,13 @@
 package DAO;
 
-import java.util.List;
+import javafx.collections.ObservableList;
 
 /**
  *
  */
 public interface DAO<T> {
 
-    public List<T> getAll();
+    public ObservableList<T> getAll();
     public T getById(int id);
     public boolean add(T item);
     public boolean update(T item);

@@ -1,5 +1,6 @@
 package DAO;
 
+import javafx.collections.ObservableList;
 import model.User;
 
 import java.util.List;
@@ -7,7 +8,7 @@ import java.util.List;
 public class UsersDao implements DAO<User> {
 
     @Override
-    public List<User> getAll() {
+    public ObservableList<User> getAll() {
         return null;
     }
 

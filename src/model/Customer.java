@@ -10,7 +10,7 @@ public class Customer {
     private String name;
     private String address;
     private String postalCode;
-    private int phoneNumber;
+    private String phoneNumber;
 
 
     /**
@@ -20,7 +20,7 @@ public class Customer {
      * @param postalCode
      * @param phoneNumber
      */
-    public Customer(int customerId, String name, String address, String postalCode, int phoneNumber) {
+    public Customer(int customerId, String name, String address, String postalCode, String phoneNumber) {
         this.customerId = customerId;
         this.name = name;
         this.address = address;
@@ -95,7 +95,7 @@ public class Customer {
      *
      * @return
      */
-    public int getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
@@ -103,7 +103,7 @@ public class Customer {
      *
      * @param phoneNumber
      */
-    public void setPhoneNumber(int phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 

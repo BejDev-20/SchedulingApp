@@ -1,5 +1,6 @@
 package DAO;
 
+import javafx.collections.ObservableList;
 import model.Appointment;
 import model.Country;
 
@@ -8,7 +9,7 @@ import java.util.List;
 public class CountryDao implements DAO<Country> {
 
     @Override
-    public List<Country> getAll() {
+    public ObservableList<Country> getAll() {
         return null;
     }
 
