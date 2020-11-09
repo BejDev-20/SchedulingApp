@@ -3,14 +3,12 @@ package DAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.Appointment;
-import model.Customer;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class AppointmentDao implements DAO<Appointment>{
 
@@ -21,9 +19,7 @@ public class AppointmentDao implements DAO<Appointment>{
         ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
         try{
             String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, " +
-                         "Customer_ID, Customer_Name, Address, Postal_Code, Phone," +
-                         "User_ID, User_Name, Password" +
-                         "FROM appointments, customers, users " +
+                         "appointments.Customer_ID, appointments.User_ID FROM appointments, customers, users " +
                          "WHERE appointments.Customer_ID = customers.Customer_ID AND appointments.User_ID = users.User_ID";
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
@@ -34,9 +30,12 @@ public class AppointmentDao implements DAO<Appointment>{
                 String appDescription = rs.getString("Description");
                 String appLocation = rs.getString("Location");
                 String appType = rs.getString("Type");
-                LocalDateTime appStartTime = rs.getTimestamp("Start");
-                String
-                Appointment app = new Appointment();
+                LocalDateTime appStartTime = rs.getTimestamp("Start").toLocalDateTime();
+                LocalDateTime appEndTime = rs.getTimestamp("End").toLocalDateTime();
+                int customerId = rs.getInt("Customer_ID");
+                int userId = rs.getInt("User_ID");
+                Appointment app = new Appointment(appId, appTitle, appDescription, appLocation, appType, appStartTime,
+                        appEndTime, customerId, userId);
                 allAppointments.add(app);
             }
         } catch (SQLException e) {
@@ -44,6 +43,7 @@ public class AppointmentDao implements DAO<Appointment>{
         }
 
         DBConnection.closeConnection();
+        return allAppointments;
     }
 
     @Override

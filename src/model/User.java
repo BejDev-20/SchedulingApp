@@ -7,13 +7,11 @@ public class User {
     private int userId;
     private String name;
     private String password;
-    private LocalDateTime lastUpdated;
 
     public User(int userId, String name, String password) {
         this.userId = userId;
         this.name = name;
         this.password = password;
-        this.lastUpdated = LocalDateTime.now();
     }
 
     public int getUserId() {
@@ -40,14 +38,6 @@ public class User {
         this.password = password;
     }
 
-    public LocalDateTime getLastUpdated() {
-        return lastUpdated;
-    }
-
-    public void setLastUpdated(LocalDateTime lastUpdated) {
-        this.lastUpdated = lastUpdated;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -64,7 +54,6 @@ public class User {
                 "userId=" + userId +
                 ", name='" + name + '\'' +
                 ", password='" + password + '\'' +
-                ", lastUpdated=" + lastUpdated +
                 '}';
     }
 }

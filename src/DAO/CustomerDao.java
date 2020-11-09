@@ -16,7 +16,6 @@ public class CustomerDao implements DAO<Customer>{
 
     @Override
     public ObservableList<Customer> getAll() {
-
         DBConnection.startConnection();
         Connection conn = DBConnection.conn;
         ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
@@ -26,13 +25,13 @@ public class CustomerDao implements DAO<Customer>{
             ResultSet rs = ps.executeQuery();
 
             while(rs.next()) {
-                int custID = rs.getInt("Customer_ID");
-                String custName = rs.getString("Customer_Name");
-                String custAddress = rs.getString("Address");
+                int customerID = rs.getInt("Customer_ID");
+                String customerName = rs.getString("Customer_Name");
+                String customerAddress = rs.getString("Address");
                 String postalCode = rs.getString("Postal_Code");
                 String phone = rs.getString("Phone");
-                Customer cust = new Customer(custID, custName, custAddress, postalCode, phone);
-                allCustomers.add(cust);
+                Customer customer = new Customer(customerID, customerName, customerAddress, postalCode, phone);
+                allCustomers.add(customer);
             }
         } catch (SQLException e) {
             e.printStackTrace();

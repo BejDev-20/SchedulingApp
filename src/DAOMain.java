@@ -1,14 +1,12 @@
-import DAO.CustomerDao;
+import DAO.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import DAO.DBConnection;
-import DAO.DBQuery;
+
 
 import java.sql.*;
-import java.util.Scanner;
 
 public class DAOMain extends Application {
 
@@ -24,8 +22,12 @@ public class DAOMain extends Application {
 
 
     public static void main(String[] args) throws SQLException {
-        CustomerDao c = new CustomerDao();
-        System.out.println(c.getAll());
+        DBCache dbCache = new DBCache();
+        System.out.println(dbCache.getCustomerHashMap());
+        System.out.println(dbCache.getAppointmentHashMap());
+        System.out.println(dbCache.getUserHashMap());
+        System.out.println(dbCache.getCountryHashMap());
+        System.out.println(dbCache.getFirstLevelDivHashMap());
         /*Connection conn = DBConnection.startConnection();
         String insertStatement = "INSERT INTO countries(Country, Create_Date, Created_By, Last_Updated_By) " +
                                  "VALUES(?, ?, ?, ?)";
