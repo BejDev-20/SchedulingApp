@@ -17,7 +17,7 @@ public class Appointment {
     private int contactId;
 
     public Appointment(int appointmentId, String title, String description, String location, String type,
-                       LocalDateTime startTime, LocalDateTime endTime, int customerId, int userId) {
+                       LocalDateTime startTime, LocalDateTime endTime, int customerId, int userId, int contactId) {
         this.appointmentId = appointmentId;
         this.title = title;
         this.description = description;
@@ -27,6 +27,7 @@ public class Appointment {
         this.endTime = endTime;
         this.customerId = customerId;
         this.userId = userId;
+        this.contactId = contactId;
     }
 
 

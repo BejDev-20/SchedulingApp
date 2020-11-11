@@ -11,7 +11,7 @@ public class Customer {
     private String address;
     private String postalCode;
     private String phoneNumber;
-
+    private Integer divisionId;
 
     /**
      * @param customerId
@@ -20,12 +20,14 @@ public class Customer {
      * @param postalCode
      * @param phoneNumber
      */
-    public Customer(int customerId, String name, String address, String postalCode, String phoneNumber) {
+    public Customer(Integer customerId, String name, String address, String postalCode, String phoneNumber,
+                    Integer divisionId) {
         this.customerId = customerId;
         this.name = name;
         this.address = address;
         this.postalCode = postalCode;
         this.phoneNumber = phoneNumber;
+        this.divisionId = divisionId;
     }
 
     /**
@@ -107,6 +109,14 @@ public class Customer {
         this.phoneNumber = phoneNumber;
     }
 
+    public Integer getDivisionId(){
+        return divisionId;
+    }
+
+    public void setDivisionId(Integer divisionId){
+        this.divisionId = divisionId;
+    }
+
     /**
      *
      * @param o
@@ -117,8 +127,7 @@ public class Customer {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Customer customer = (Customer) o;
-        return customerId == customer.customerId &&
-                phoneNumber == customer.phoneNumber &&
+        return phoneNumber == customer.phoneNumber &&
                 name.equals(customer.name) &&
                 address.equals(customer.address) &&
                 postalCode.equals(customer.postalCode);

@@ -11,24 +11,48 @@ import java.util.HashMap;
 
 /**
  * IMPLEMENT SINGLETON
+ * Think of implementing the timer to update the cache periodically
  */
 public class DBCache {
 
+    private User currentUser;
     private HashMap<Integer, Customer> customerHashMap = new HashMap<>();
     private HashMap<Integer, Appointment> appointmentHashMap = new HashMap<>();
     private HashMap<Integer, User> userHashMap = new HashMap<>();
     private HashMap<Integer, FirstLevelDiv> firstLevelDivHashMap = new HashMap<>();
     private HashMap<Integer, Country> countryHashMap = new HashMap<>();
 
-    public DBCache(){
-        loadCustomers();
-        loadUsers();
-        loadCountries();
-        loadFirstLevelDiv();
-        loadAppointments();
+    private static DBCache single_instance = null;
+
+    private DBCache(){
+        updateAllCache();
+        currentUser = null;
     }
 
-    private void loadAppointments() {
+    public static DBCache getInstance(){
+        if (single_instance == null){
+            single_instance = new DBCache();
+        }
+        return single_instance;
+    }
+
+    public void setUser(User user){
+        this.currentUser = user;
+    }
+
+    public User getUser(){
+        return currentUser;
+    }
+
+    public void updateAllCache(){
+        updateCustomers();
+        updateUsers();
+        updateCountries();
+        loadFirstLevelDiv();
+        updateAppointments();
+    }
+
+    public void updateAppointments() {
         AppointmentDao appointmentDao = new AppointmentDao();
         ObservableList<Appointment> appointments = appointmentDao.getAll();
         for (Appointment appointment : appointments) {
@@ -36,7 +60,7 @@ public class DBCache {
         }
     }
 
-    private void loadFirstLevelDiv() {
+    public void loadFirstLevelDiv() {
         FirstLevelDivDao firstLevelDivDao = new FirstLevelDivDao();
         ObservableList<FirstLevelDiv> firstLevelDivs = firstLevelDivDao.getAll();
         for (FirstLevelDiv firstLevelDiv : firstLevelDivs) {
@@ -44,7 +68,7 @@ public class DBCache {
         }
     }
 
-    private void loadCountries() {
+    public void updateCountries() {
         CountryDao countryDao = new CountryDao();
         ObservableList<Country> countries = countryDao.getAll();
         for (Country country : countries) {
@@ -52,7 +76,7 @@ public class DBCache {
         }
     }
 
-    private void loadUsers() {
+    public void updateUsers() {
         UsersDao usersDao = new UsersDao();
         ObservableList<User> users = usersDao.getAll();
         for (User user : users) {
@@ -60,7 +84,7 @@ public class DBCache {
         }
     }
 
-    private void loadCustomers(){
+    public void updateCustomers(){
         CustomerDao customerDao = new CustomerDao();
         ObservableList<Customer> customers = customerDao.getAll();
         for (Customer customer : customers) {

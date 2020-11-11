@@ -43,8 +43,7 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return userId == user.userId &&
-                name.equals(user.name) &&
+        return name.equals(user.name) &&
                 password.equals(user.password);
     }
 
