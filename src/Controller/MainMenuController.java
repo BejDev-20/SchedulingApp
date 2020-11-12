@@ -8,7 +8,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
-import model.User;
 
 import java.io.IOException;
 
@@ -20,7 +19,7 @@ public class MainMenuController {
     private Button customersButton;
 
     @FXML
-    private Button calendarButton;
+    private Button appointmentsButton;
 
     @FXML
     private Button addAppointmentButton;
@@ -42,31 +41,35 @@ public class MainMenuController {
 
     @FXML
     public void initialize(){
+
         addCustomerButton.setOnAction(new EventHandler<ActionEvent>() {
-
             public void handle(ActionEvent event) {
-
+                stage = getStage("../view/AddCustomer.fxml", event);
+                stage.show();
             }
         });
 
         customersButton.setOnAction(new EventHandler<ActionEvent>() {
 
             public void handle(ActionEvent event) {
-
+                stage = getStage("../view/CustomerList.fxml", event);
+                stage.show();
             }
         });
 
-        calendarButton.setOnAction(new EventHandler<ActionEvent>() {
+        appointmentsButton.setOnAction(new EventHandler<ActionEvent>() {
 
             public void handle(ActionEvent event) {
-
+                stage = getStage("../view/AppointmentsList.fxml", event);
+                stage.show();
             }
         });
 
         addAppointmentButton.setOnAction(new EventHandler<ActionEvent>() {
 
             public void handle(ActionEvent event) {
-
+                stage = getStage("../view/AddAppointment.fxml", event);
+                stage.show();
             }
         });
 

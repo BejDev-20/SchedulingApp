@@ -14,7 +14,7 @@ public class DAOMain extends Application {
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("view/LoginScreen.fxml"));
         primaryStage.setTitle("Sasquatch Consulting");
-        primaryStage.setScene(new Scene(root, 450, 240));
+        primaryStage.setScene(new Scene(root));
         double x = (Screen.getPrimary().getBounds().getWidth() - root.getScene().getWidth())/2;
         double y = (Screen.getPrimary().getBounds().getHeight() - root.getScene().getHeight())/2;
         primaryStage.setX(x);
