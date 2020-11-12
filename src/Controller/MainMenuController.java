@@ -52,7 +52,7 @@ public class MainMenuController {
         customersButton.setOnAction(new EventHandler<ActionEvent>() {
 
             public void handle(ActionEvent event) {
-                stage = getStage("../view/CustomerList.fxml", event);
+                stage = getStage("../view/CustomersList.fxml", event);
                 stage.show();
             }
         });
