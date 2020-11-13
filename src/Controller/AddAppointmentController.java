@@ -64,4 +64,11 @@ public class AddAppointmentController {
     @FXML
     private TextArea descriptionTextArea;
 
+    @FXML
+    public void initialize(){
+
+
+
+    }
+
 }
