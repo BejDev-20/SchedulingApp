@@ -50,7 +50,8 @@ public class CustomerListController {
     public void initialize(){
         saveButton.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
-
+                stage = getStage("../view/MainMenu.fxml", event);
+                stage.show();
             }
         });
 
@@ -70,10 +71,15 @@ public class CustomerListController {
         });
 
         updateCustomerButton.setOnAction(new EventHandler<ActionEvent>() {
-
             public void handle(ActionEvent event) {
-                stage = getStage("../view/AddAppointment.fxml", event);
+                stage = getStage("../view/AddCustomer.fxml", event);
                 stage.show();
+            }
+        });
+
+        deleteCustomerButton.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+
             }
         });
     }

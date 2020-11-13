@@ -41,7 +41,6 @@ public class MainMenuController {
 
     @FXML
     public void initialize(){
-
         addCustomerButton.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
                 stage = getStage("../view/AddCustomer.fxml", event);
