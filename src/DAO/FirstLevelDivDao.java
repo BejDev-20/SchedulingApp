@@ -5,10 +5,10 @@ import javafx.collections.ObservableList;
 import model.Country;
 import model.FirstLevelDiv;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDateTime;
+
+import static DAO.DBCache.getInstance;
 
 public class FirstLevelDivDao implements DAO<FirstLevelDiv> {
 
@@ -37,21 +37,75 @@ public class FirstLevelDivDao implements DAO<FirstLevelDiv> {
 
     @Override
     public FirstLevelDiv getById(int id) {
-        return null;
+        Connection conn = DBConnection.getConn();
+        FirstLevelDiv firstLevelDiv = null;
+        try{
+            String sql = "SELECT Division_ID, Division, COUNTRY_ID FROM first_level_divisions WHERE Division_ID = " + id;
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                if(id == rs.getInt("Division_ID")) {
+                    int divisionId = rs.getInt("Division_ID");
+                    String divisionName = rs.getString("Division");
+                    int countryId = rs.getInt("COUNTRY_ID");
+                    firstLevelDiv = new FirstLevelDiv(divisionId, divisionName, countryId);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if (firstLevelDiv != null) DBCache.getInstance().updateFirstLevelDivision();
+        return firstLevelDiv;
     }
 
     @Override
     public boolean add(FirstLevelDiv item) {
-        return false;
+        try {
+            String sql = "INSERT INTO first_level_divisions VALUES(NULL, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement psti = DBConnection.getConn().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            psti.setString(1, item.getName());
+            psti.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
+            psti.setString(3, getInstance().getUser().getName());
+            psti.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
+            psti.setString(5, getInstance().getUser().getName());
+            psti.setInt(6, item.getCountryId());
+            psti.execute();
+            DBCache.getInstance().updateFirstLevelDivision();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return true;
     }
 
     @Override
     public boolean update(FirstLevelDiv item) {
-        return false;
+        try {
+            String sql = "UPDATE first_level_divisions SET Division = ?, Last_Update = ?, Last_Updated_By = ?, " +
+                    "COUNTRY_ID=? WHERE Country_ID = ? ;";
+            PreparedStatement psti = DBConnection.getConn().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            psti.setString(1, item.getName());
+            psti.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
+            psti.setString(3, getInstance().getUser().getName());
+            psti.setInt(4, item.getCountryId());
+            psti.execute();
+            DBCache.getInstance().updateFirstLevelDivision();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return true;
     }
 
     @Override
     public boolean delete(FirstLevelDiv item) {
-        return false;
+        try {
+            String sql = "DELETE FROM first_level_divisions WHERE Division_ID = ? ;";
+            PreparedStatement psti = DBConnection.getConn().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            psti.setInt(1, item.getDivisionId());
+            psti.execute();
+            DBCache.getInstance().updateFirstLevelDivision();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return true;
     }
 }

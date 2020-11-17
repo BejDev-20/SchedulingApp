@@ -49,18 +49,21 @@ public class CustomerDao implements DAO<Customer>{
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
-                int customerID = rs.getInt("Customer_ID");
-                String customerName = rs.getString("Customer_Name");
-                String customerAddress = rs.getString("Address");
-                String postalCode = rs.getString("Postal_Code");
-                String phone = rs.getString("Phone");
-                Integer divisionId = rs.getInt("Division_ID");
-                customer = new Customer(customerID, customerName, customerAddress, postalCode, phone, divisionId);
+                if (id == rs.getInt("Customer_ID")) {
+                    int customerID = rs.getInt("Customer_ID");
+                    String customerName = rs.getString("Customer_Name");
+                    String customerAddress = rs.getString("Address");
+                    String postalCode = rs.getString("Postal_Code");
+                    String phone = rs.getString("Phone");
+                    Integer divisionId = rs.getInt("Division_ID");
+                    customer = new Customer(customerID, customerName, customerAddress, postalCode, phone, divisionId);
+                    break;
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
+        if (customer != null) DBCache.getInstance().updateCustomers();
         return customer;
     }
 
@@ -79,6 +82,8 @@ public class CustomerDao implements DAO<Customer>{
             psti.setString(8, getInstance().getUser().getName());
             psti.setInt(9, item.getDivisionId());
             psti.execute();
+            DBCache cache = DBCache.getInstance();
+            cache.updateCustomers();
         } catch (SQLException e){
             e.printStackTrace();
         }
@@ -100,14 +105,26 @@ public class CustomerDao implements DAO<Customer>{
             psti.setInt(7, item.getDivisionId());
             psti.setInt(8, item.getCustomerId());
             psti.execute();
-    } catch (SQLException e){
-        e.printStackTrace();
-    }
+            DBCache cache = DBCache.getInstance();
+            cache.updateCustomers();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
         return true;
     }
 
     @Override
     public boolean delete(Customer item) {
-        return false;
+        try {
+            String sql = "DELETE FROM customers WHERE Customer_ID = ? ;";
+            PreparedStatement psti = DBConnection.getConn().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            psti.setInt(1, item.getCustomerId());
+            psti.execute();
+            DBCache cache = DBCache.getInstance();
+            cache.updateCustomers();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return true;
     }
 }

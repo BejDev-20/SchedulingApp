@@ -1,5 +1,6 @@
 package Controller;
 
+import DAO.DBCache;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -10,8 +11,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import model.Customer;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
 
 public class CustomerListController {
 
@@ -53,8 +57,13 @@ public class CustomerListController {
         stage.setResizable(false);
     }
 
+    private void fillCustomerTable(Collection<Customer> values){
+
+    }
+
     @FXML
     public void initialize(){
+        fillCustomerTable(DBCache.getInstance().getCustomerHashMap().values());
 
         backButton.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {

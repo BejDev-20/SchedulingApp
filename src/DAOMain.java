@@ -1,3 +1,5 @@
+import DAO.CountryDao;
+import DAO.CustomerDao;
 import DAO.DBCache;
 import DAO.DBConnection;
 import javafx.application.Application;
@@ -6,6 +8,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import model.Country;
+import model.Customer;
 
 import java.sql.SQLException;
 
@@ -30,7 +34,13 @@ public class DAOMain extends Application {
 
     public static void main(String[] args) throws SQLException {
         DBConnection.startConnection();
-        launch(args);
+        //launch(args);
+        DBCache cache = DBCache.getInstance();
+        Country country = cache.getCountryById(6);
+        System.out.println(country);
+        CountryDao countryDao = new CountryDao();
+        countryDao.delete(country);
+        System.out.println(cache.getCountryHashMap());
         DBConnection.closeConnection();
     }
 }

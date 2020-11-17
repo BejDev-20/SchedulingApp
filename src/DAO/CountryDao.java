@@ -2,15 +2,11 @@ package DAO;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import model.Appointment;
 import model.Country;
-import model.Customer;
+import java.sql.*;
+import java.time.LocalDateTime;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
+import static DAO.DBCache.getInstance;
 
 public class CountryDao implements DAO<Country> {
 
@@ -37,21 +33,72 @@ public class CountryDao implements DAO<Country> {
 
     @Override
     public Country getById(int id) {
-        return null;
+        Connection conn = DBConnection.getConn();
+        Country country = null;
+        try{
+            String sql = "SELECT Country_ID, Country FROM countries WHERE Country_ID = " + id;
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                if(id == rs.getInt("Country_ID")) {
+                    int countryId = rs.getInt("Country_ID");
+                    String countryName = rs.getString("Country");
+                    country = new Country(countryId, countryName);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if (country != null) DBCache.getInstance().updateCountries();
+        return country;
     }
 
     @Override
     public boolean add(Country item) {
-        return false;
+        try {
+            String sql = "INSERT INTO countries VALUES(NULL, ?, ?, ?, ?, ?)";
+            PreparedStatement psti = DBConnection.getConn().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            psti.setString(1, item.getName());
+            psti.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
+            psti.setString(3, getInstance().getUser().getName());
+            psti.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
+            psti.setString(5, getInstance().getUser().getName());
+            psti.execute();
+            DBCache.getInstance().updateCustomers();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return true;
     }
 
     @Override
     public boolean update(Country item) {
-        return false;
+        try {
+            String sql = "UPDATE countries SET Country = ?, Last_Update = ?, Last_Updated_By = ? " +
+                         "WHERE Country_ID = ? ;";
+            PreparedStatement psti = DBConnection.getConn().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            psti.setString(1, item.getName());
+            psti.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
+            psti.setString(3, getInstance().getUser().getName());
+            psti.execute();
+            DBCache.getInstance().updateCountries();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return true;
     }
 
     @Override
     public boolean delete(Country item) {
-        return false;
+        try {
+            String sql = "DELETE FROM countries WHERE Country_ID = ? ;";
+            PreparedStatement psti = DBConnection.getConn().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            psti.setInt(1, item.getCountryId());
+            psti.execute();
+            DBCache.getInstance().updateCountries();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return true;
     }
 }

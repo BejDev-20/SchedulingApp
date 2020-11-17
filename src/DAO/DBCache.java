@@ -55,6 +55,7 @@ public class DBCache {
     public void updateAppointments() {
         AppointmentDao appointmentDao = new AppointmentDao();
         ObservableList<Appointment> appointments = appointmentDao.getAll();
+        appointmentHashMap.clear();
         for (Appointment appointment : appointments) {
             appointmentHashMap.put(appointment.getAppointmentId(), appointment);
         }
@@ -63,6 +64,7 @@ public class DBCache {
     public void loadFirstLevelDiv() {
         FirstLevelDivDao firstLevelDivDao = new FirstLevelDivDao();
         ObservableList<FirstLevelDiv> firstLevelDivs = firstLevelDivDao.getAll();
+        firstLevelDivHashMap.clear();
         for (FirstLevelDiv firstLevelDiv : firstLevelDivs) {
             firstLevelDivHashMap.put(firstLevelDiv.getDivisionId(), firstLevelDiv);
         }
@@ -71,6 +73,7 @@ public class DBCache {
     public void updateCountries() {
         CountryDao countryDao = new CountryDao();
         ObservableList<Country> countries = countryDao.getAll();
+        countryHashMap.clear();
         for (Country country : countries) {
             countryHashMap.put(country.getCountryId(), country);
         }
@@ -79,6 +82,7 @@ public class DBCache {
     public void updateUsers() {
         UsersDao usersDao = new UsersDao();
         ObservableList<User> users = usersDao.getAll();
+        userHashMap.clear();
         for (User user : users) {
             userHashMap.put(user.getUserId(), user);
         }
@@ -87,8 +91,18 @@ public class DBCache {
     public void updateCustomers(){
         CustomerDao customerDao = new CustomerDao();
         ObservableList<Customer> customers = customerDao.getAll();
+        customerHashMap.clear();
         for (Customer customer : customers) {
             customerHashMap.put(customer.getCustomerId(), customer);
+        }
+    }
+
+    public void updateFirstLevelDivision(){
+        FirstLevelDivDao firstLevelDivDao = new FirstLevelDivDao();
+        ObservableList<FirstLevelDiv> firstLevelDivs = firstLevelDivDao.getAll();
+        firstLevelDivHashMap.clear();
+        for (FirstLevelDiv firstLevelDiv : firstLevelDivs) {
+            firstLevelDivHashMap.put(firstLevelDiv.getDivisionId(), firstLevelDiv);
         }
     }
 
