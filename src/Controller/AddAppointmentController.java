@@ -12,6 +12,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -22,7 +23,10 @@ public class AddAppointmentController {
     private Button saveButton;
 
     @FXML
-    private Button backButton;
+    private Button cancelButton;
+
+    @FXML
+    private Button allAppointmentsButton;
 
     @FXML
     private Label descriptionLabel;
@@ -72,6 +76,8 @@ public class AddAppointmentController {
     @FXML
     private TextArea descriptionTextArea;
 
+
+
     private Stage stage;
     private Parent scene;
 
@@ -87,19 +93,38 @@ public class AddAppointmentController {
         return stage;
     }
 
+    private void setWindowPosition(){
+        double x = (Screen.getPrimary().getBounds().getWidth() - scene.getBoundsInParent().getWidth())/2;
+        double y = (Screen.getPrimary().getBounds().getHeight() - scene.getBoundsInParent().getHeight())/2;
+        stage.setX(x);
+        stage.setY(y);
+        stage.setResizable(false);
+    }
+
     @FXML
     public void initialize(){
+
         saveButton.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
                 stage = getStage("../view/AppointmentsList.fxml", event);
                 stage.show();
+                setWindowPosition();
             }
         });
 
-        backButton.setOnAction(new EventHandler<ActionEvent>() {
+        cancelButton.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+                stage = getStage("../view/MainMenu.fxml", event);
+                stage.show();
+                setWindowPosition();
+            }
+        });
+
+        allAppointmentsButton.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
                 stage = getStage("../view/AppointmentsList.fxml", event);
                 stage.show();
+                setWindowPosition();
             }
         });
 

@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -50,10 +51,13 @@ public class AddCustomerController {
     private ComboBox<?> divisionComboBox;
 
     @FXML
-    private Button addButton;
+    private Button saveButton;
 
     @FXML
-    private Button backButton;
+    private Button cancelButton;
+
+    @FXML
+    private Button allCustomersButton;
 
     private Stage stage;
     private Parent scene;
@@ -70,19 +74,37 @@ public class AddCustomerController {
         return stage;
     }
 
+    private void setWindowPosition(){
+        double x = (Screen.getPrimary().getBounds().getWidth() - scene.getBoundsInParent().getWidth())/2;
+        double y = (Screen.getPrimary().getBounds().getHeight() - scene.getBoundsInParent().getHeight())/2;
+        stage.setX(x);
+        stage.setY(y);
+        stage.setResizable(false);
+    }
+
     @FXML
     public void initialize() {
-        addButton.setOnAction(new EventHandler<ActionEvent>() {
+        saveButton.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
                 stage = getStage("../view/CustomersList.fxml", event);
                 stage.show();
+                setWindowPosition();
             }
         });
 
-        backButton.setOnAction(new EventHandler<ActionEvent>() {
+        cancelButton.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+                stage = getStage("../view/MainMenu.fxml", event);
+                stage.show();
+                setWindowPosition();
+            }
+        });
+
+        allCustomersButton.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
                 stage = getStage("../view/CustomersList.fxml", event);
                 stage.show();
+                setWindowPosition();
             }
         });
     }

@@ -1,3 +1,5 @@
+import DAO.DBCache;
+import DAO.DBConnection;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,10 +15,11 @@ public class DAOMain extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("view/LoginScreen.fxml"));
+
         primaryStage.setTitle("Sasquatch Consulting");
         primaryStage.setScene(new Scene(root));
-        double x = (Screen.getPrimary().getBounds().getWidth() - root.getScene().getWidth())/2;
-        double y = (Screen.getPrimary().getBounds().getHeight() - root.getScene().getHeight())/2;
+        double x = (Screen.getPrimary().getBounds().getWidth() - root.getBoundsInParent().getWidth())/2;
+        double y = (Screen.getPrimary().getBounds().getHeight() - root.getBoundsInParent().getHeight())/2;
         primaryStage.setX(x);
         primaryStage.setY(y);
         primaryStage.setResizable(false);
@@ -26,6 +29,8 @@ public class DAOMain extends Application {
 
 
     public static void main(String[] args) throws SQLException {
+        DBConnection.startConnection();
         launch(args);
+        DBConnection.closeConnection();
     }
 }

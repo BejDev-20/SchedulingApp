@@ -85,7 +85,7 @@
             <ComboBox fx:id="divisionComboBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="150.0" style="-fx-background-color: #D8DEE9;" GridPane.columnIndex="1" GridPane.rowIndex="4" />
          </children>
       </GridPane>
-      <Button fx:id="addButton" layoutX="258.0" layoutY="336.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: #81A1C1;" text="Add" textFill="#eceff4">
+      <Button fx:id="saveButton" layoutX="258.0" layoutY="343.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: #81A1C1;" text="Save" textFill="#eceff4">
          <font>
             <Font name="Ebrima" size="14.0" />
          </font>
@@ -93,7 +93,15 @@
             <DropShadow color="#213145" />
          </effect>
       </Button>
-      <Button fx:id="backButton" layoutX="340.0" layoutY="336.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: #81A1C1;" text="Back" textFill="#eceff4">
+      <Button fx:id="cancelButton" layoutX="340.0" layoutY="343.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: #81A1C1;" text="Cancel" textFill="#eceff4">
+         <font>
+            <Font name="Ebrima" size="14.0" />
+         </font>
+         <effect>
+            <DropShadow color="#213145" />
+         </effect>
+      </Button>
+      <Button fx:id="allCustomersButton" layoutX="38.0" layoutY="343.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="118.0" style="-fx-background-color: #81A1C1;" text="All Customers" textFill="#eceff4">
          <font>
             <Font name="Ebrima" size="14.0" />
          </font>

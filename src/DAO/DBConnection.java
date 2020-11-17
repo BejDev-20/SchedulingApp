@@ -15,7 +15,7 @@ public class DBConnection {
 
     private static final String JDBC_URL = PROTOCOL + VENDOR_NAME + IP_ADDRESS;
     private static final String MYSQL_JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-    static Connection conn = null;
+    private static Connection conn = null;
 
     private static final String USERNAME = "U07OFg";
     private static final String PASSWORD = "53689083159";
@@ -40,5 +40,12 @@ public class DBConnection {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    public static Connection getConn(){
+        if (conn == null){
+            startConnection();
+        }
+        return conn;
     }
 }

@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -39,12 +40,21 @@ public class MainMenuController {
         return stage;
     }
 
+    private void setWindowPosition(){
+        double x = (Screen.getPrimary().getBounds().getWidth() - scene.getBoundsInParent().getWidth())/2;
+        double y = (Screen.getPrimary().getBounds().getHeight() - scene.getBoundsInParent().getHeight())/2;
+        stage.setX(x);
+        stage.setY(y);
+        stage.setResizable(false);
+    }
+
     @FXML
     public void initialize(){
         addCustomerButton.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
                 stage = getStage("../view/AddCustomer.fxml", event);
                 stage.show();
+                setWindowPosition();
             }
         });
 
@@ -53,6 +63,7 @@ public class MainMenuController {
             public void handle(ActionEvent event) {
                 stage = getStage("../view/CustomersList.fxml", event);
                 stage.show();
+                setWindowPosition();
             }
         });
 
@@ -61,6 +72,7 @@ public class MainMenuController {
             public void handle(ActionEvent event) {
                 stage = getStage("../view/AppointmentsList.fxml", event);
                 stage.show();
+                setWindowPosition();
             }
         });
 
@@ -69,6 +81,7 @@ public class MainMenuController {
             public void handle(ActionEvent event) {
                 stage = getStage("../view/AddAppointment.fxml", event);
                 stage.show();
+                setWindowPosition();
             }
         });
 

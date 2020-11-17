@@ -14,14 +14,6 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="600.0" style="-fx-background-color: #5E81AC;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.CustomerListController">
    <children>
-      <Button fx:id="saveButton" layoutX="435.0" layoutY="415.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="65.0" style="-fx-background-color: #81A1C1;" text="Save" textFill="#eceff4">
-         <font>
-            <Font name="Ebrima" size="12.0" />
-         </font>
-         <effect>
-            <DropShadow color="#213145" />
-         </effect>
-      </Button>
       <Button fx:id="backButton" layoutX="511.0" layoutY="415.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="65.0" style="-fx-background-color: #81A1C1;" text="Back" textFill="#eceff4">
          <font>
             <Font name="Ebrima" size="12.0" />

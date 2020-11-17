@@ -9,14 +9,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 
 public class UsersDao implements DAO<User> {
 
     @Override
     public ObservableList<User> getAll() {
-        DBConnection.startConnection();
-        Connection conn = DBConnection.conn;
+        Connection conn = DBConnection.getConn();
         ObservableList<User> allUsers = FXCollections.observableArrayList();
         try{
             String sql = "SELECT User_ID, User_Name, Password FROM users";
@@ -33,7 +31,6 @@ public class UsersDao implements DAO<User> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        DBConnection.closeConnection();
         return allUsers;
     }
 

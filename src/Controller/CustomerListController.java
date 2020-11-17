@@ -8,13 +8,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
 public class CustomerListController {
-    @FXML
-    private Button saveButton;
 
     @FXML
     private Button backButton;
@@ -46,19 +45,22 @@ public class CustomerListController {
         return stage;
     }
 
+    private void setWindowPosition(){
+        double x = (Screen.getPrimary().getBounds().getWidth() - scene.getBoundsInParent().getWidth())/2;
+        double y = (Screen.getPrimary().getBounds().getHeight() - scene.getBoundsInParent().getHeight())/2;
+        stage.setX(x);
+        stage.setY(y);
+        stage.setResizable(false);
+    }
+
     @FXML
     public void initialize(){
-        saveButton.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                stage = getStage("../view/MainMenu.fxml", event);
-                stage.show();
-            }
-        });
 
         backButton.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
                 stage = getStage("../view/MainMenu.fxml", event);
                 stage.show();
+                setWindowPosition();
             }
         });
 
@@ -67,6 +69,7 @@ public class CustomerListController {
             public void handle(ActionEvent event) {
                 stage = getStage("../view/AddCustomer.fxml", event);
                 stage.show();
+                setWindowPosition();
             }
         });
 
@@ -74,6 +77,7 @@ public class CustomerListController {
             public void handle(ActionEvent event) {
                 stage = getStage("../view/AddCustomer.fxml", event);
                 stage.show();
+                setWindowPosition();
             }
         });
 

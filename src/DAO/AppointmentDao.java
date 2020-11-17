@@ -14,8 +14,7 @@ public class AppointmentDao implements DAO<Appointment>{
 
     @Override
     public ObservableList<Appointment> getAll() {
-        DBConnection.startConnection();
-        Connection conn = DBConnection.conn;
+        Connection conn = DBConnection.getConn();
         ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
         try{
             String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, " +
@@ -42,15 +41,12 @@ public class AppointmentDao implements DAO<Appointment>{
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        DBConnection.closeConnection();
         return allAppointments;
     }
 
     @Override
     public Appointment getById(int id) {
-        DBConnection.startConnection();
-        Connection conn = DBConnection.conn;
+        Connection conn = DBConnection.getConn();
         Appointment appointment = null;
         try{
             String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, " +
@@ -77,7 +73,6 @@ public class AppointmentDao implements DAO<Appointment>{
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        DBConnection.closeConnection();
         return appointment;
     }
 

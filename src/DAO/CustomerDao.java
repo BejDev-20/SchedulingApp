@@ -16,8 +16,7 @@ public class CustomerDao implements DAO<Customer>{
 
     @Override
     public ObservableList<Customer> getAll() {
-        DBConnection.startConnection();
-        Connection conn = DBConnection.conn;
+        Connection conn = DBConnection.getConn();
         ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
         try{
             String sql = "SELECT Customer_ID, Customer_Name, Address, Postal_Code, Phone, Division_ID FROM customers";
@@ -37,15 +36,12 @@ public class CustomerDao implements DAO<Customer>{
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        DBConnection.closeConnection();
         return allCustomers;
     }
 
     @Override
     public Customer getById(int id) {
-        DBConnection.startConnection();
-        Connection conn = DBConnection.conn;
+        Connection conn = DBConnection.getConn();
         Customer customer = null;
         try{
             String sql = "SELECT Customer_ID, Customer_Name, Address, Postal_Code, Phone, Division_ID FROM customers" +
@@ -65,16 +61,14 @@ public class CustomerDao implements DAO<Customer>{
             e.printStackTrace();
         }
 
-        DBConnection.closeConnection();
         return customer;
     }
 
     @Override
     public boolean add(Customer item) {
         try {
-            DBConnection.startConnection();
             String sql = "INSERT INTO customers VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            PreparedStatement psti = DBConnection.conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement psti = DBConnection.getConn().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             psti.setString(1, item.getName());
             psti.setString(2, item.getAddress());
             psti.setString(3, item.getPostalCode());
@@ -85,7 +79,6 @@ public class CustomerDao implements DAO<Customer>{
             psti.setString(8, getInstance().getUser().getName());
             psti.setInt(9, item.getDivisionId());
             psti.execute();
-            DBConnection.closeConnection();
         } catch (SQLException e){
             e.printStackTrace();
         }
@@ -95,10 +88,9 @@ public class CustomerDao implements DAO<Customer>{
     @Override
     public boolean update(Customer item) {
         try {
-            DBConnection.startConnection();
             String sql = "UPDATE customers SET Customer_Name = ?, Address = ?, Postal_Code = ?, Phone = ?," +
                          " Last_Update = ?, Last_Updated_By = ?, Division_ID = ? WHERE Customer_ID = ? ;";
-            PreparedStatement psti = DBConnection.conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement psti = DBConnection.getConn().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             psti.setString(1, item.getName());
             psti.setString(2, item.getAddress());
             psti.setString(3, item.getPostalCode());
@@ -108,7 +100,6 @@ public class CustomerDao implements DAO<Customer>{
             psti.setInt(7, item.getDivisionId());
             psti.setInt(8, item.getCustomerId());
             psti.execute();
-            DBConnection.closeConnection();
     } catch (SQLException e){
         e.printStackTrace();
     }

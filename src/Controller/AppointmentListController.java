@@ -11,14 +11,12 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableView;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
 public class AppointmentListController {
-
-    @FXML
-    private Button saveButton;
 
     @FXML
     private Button backButton;
@@ -65,19 +63,22 @@ public class AppointmentListController {
         return stage;
     }
 
+    private void setWindowPosition(){
+        double x = (Screen.getPrimary().getBounds().getWidth() - scene.getBoundsInParent().getWidth())/2;
+        double y = (Screen.getPrimary().getBounds().getHeight() - scene.getBoundsInParent().getHeight())/2;
+        stage.setX(x);
+        stage.setY(y);
+        stage.setResizable(false);
+    }
+
     @FXML
     public void initialize(){
-        saveButton.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                stage = getStage("../view/MainMenu.fxml", event);
-                stage.show();
-            }
-        });
 
         backButton.setOnAction(new EventHandler<ActionEvent>() {
         public void handle(ActionEvent event) {
             stage = getStage("../view/MainMenu.fxml", event);
             stage.show();
+            setWindowPosition();
         }
         });
 
@@ -85,6 +86,7 @@ public class AppointmentListController {
             public void handle(ActionEvent event) {
             stage = getStage("../view/AddAppointment.fxml", event);
             stage.show();
+            setWindowPosition();
             }
         });
 
@@ -92,6 +94,7 @@ public class AppointmentListController {
             public void handle(ActionEvent event) {
                 stage = getStage("../view/AddAppointment.fxml", event);
                 stage.show();
+                setWindowPosition();
             }
         });
 

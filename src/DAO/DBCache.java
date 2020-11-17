@@ -92,6 +92,51 @@ public class DBCache {
         }
     }
 
+    public Appointment getAppById(int id){
+        Appointment app = appointmentHashMap.get(id);
+        if (app == null){
+            AppointmentDao appointmentDao = new AppointmentDao();
+            app = appointmentDao.getById(id);
+        }
+        return app;
+    }
+
+    public Customer getCustomerById(int id){
+        Customer customer = customerHashMap.get(id);
+        if (customer == null){
+            CustomerDao customerDao = new CustomerDao();
+            customer = customerDao.getById(id);
+        }
+        return customer;
+    }
+
+    public User getUserById(int id){
+        User user = userHashMap.get(id);
+        if (user == null){
+            UsersDao usersDao = new UsersDao();
+            user = usersDao.getById(id);
+        }
+        return user;
+    }
+
+    public Country getCountryById(int id){
+        Country country = countryHashMap.get(id);
+        if (country == null){
+            CountryDao countryDao = new CountryDao();
+            country = countryDao.getById(id);
+        }
+        return country;
+    }
+
+    public FirstLevelDiv getFirstLevelDivById(int id){
+        FirstLevelDiv firstLevelDiv = firstLevelDivHashMap.get(id);
+        if (firstLevelDiv == null){
+            FirstLevelDivDao firstLevelDivDao = new FirstLevelDivDao();
+            firstLevelDiv = firstLevelDivDao.getById(id);
+        }
+        return firstLevelDiv;
+    }
+
     public HashMap<Integer, Customer> getCustomerHashMap() {
         return customerHashMap;
     }
@@ -107,6 +152,7 @@ public class DBCache {
     public HashMap<Integer, Country> getCountryHashMap(){
         return countryHashMap;
     }
+
     public HashMap<Integer, FirstLevelDiv> getFirstLevelDivHashMap() {
         return firstLevelDivHashMap;
     }

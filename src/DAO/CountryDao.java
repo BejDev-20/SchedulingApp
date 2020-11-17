@@ -16,8 +16,7 @@ public class CountryDao implements DAO<Country> {
 
     @Override
     public ObservableList<Country> getAll() {
-        DBConnection.startConnection();
-        Connection conn = DBConnection.conn;
+        Connection conn = DBConnection.getConn();
         ObservableList<Country> allCountries = FXCollections.observableArrayList();
         try{
             String sql = "SELECT Country_ID, Country FROM countries";
@@ -33,8 +32,6 @@ public class CountryDao implements DAO<Country> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        DBConnection.closeConnection();
         return allCountries;
     }
 

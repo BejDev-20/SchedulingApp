@@ -14,8 +14,7 @@ public class FirstLevelDivDao implements DAO<FirstLevelDiv> {
 
     @Override
     public ObservableList<FirstLevelDiv> getAll() {
-        DBConnection.startConnection();
-        Connection conn = DBConnection.conn;
+        Connection conn = DBConnection.getConn();
         ObservableList<FirstLevelDiv> allFirstLevelDiv = FXCollections.observableArrayList();
         try{
             String sql = "SELECT Division_ID, Division, COUNTRY_ID FROM first_level_divisions";
@@ -33,7 +32,6 @@ public class FirstLevelDivDao implements DAO<FirstLevelDiv> {
             e.printStackTrace();
         }
 
-        DBConnection.closeConnection();
         return allFirstLevelDiv;
     }
 
