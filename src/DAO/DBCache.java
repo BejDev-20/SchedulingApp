@@ -21,6 +21,7 @@ public class DBCache {
     private HashMap<Integer, User> userHashMap = new HashMap<>();
     private HashMap<Integer, FirstLevelDiv> firstLevelDivHashMap = new HashMap<>();
     private HashMap<Integer, Country> countryHashMap = new HashMap<>();
+    private HashMap<Integer, Contact> contactHashMap = new HashMap<>();
 
     private static DBCache single_instance = null;
 
@@ -50,6 +51,7 @@ public class DBCache {
         updateCountries();
         loadFirstLevelDiv();
         updateAppointments();
+        updateContacts();
     }
 
     public void updateAppointments() {
@@ -103,6 +105,15 @@ public class DBCache {
         firstLevelDivHashMap.clear();
         for (FirstLevelDiv firstLevelDiv : firstLevelDivs) {
             firstLevelDivHashMap.put(firstLevelDiv.getDivisionId(), firstLevelDiv);
+        }
+    }
+
+    public void updateContacts(){
+        ContactDao contactDao = new ContactDao();
+        ObservableList<Contact> contacts = contactDao.getAll();
+        contactHashMap.clear();
+        for (Contact contact : contacts) {
+            contactHashMap.put(contact.getContactId(), contact);
         }
     }
 
@@ -169,5 +180,9 @@ public class DBCache {
 
     public HashMap<Integer, FirstLevelDiv> getFirstLevelDivHashMap() {
         return firstLevelDivHashMap;
+    }
+
+    public HashMap<Integer, Contact> getContactHashMap() {
+        return contactHashMap;
     }
 }

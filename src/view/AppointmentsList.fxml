@@ -33,14 +33,14 @@
       </ImageView>
       <TableView fx:id="appointmentsTableView" layoutX="42.0" layoutY="158.0" prefHeight="291.0" prefWidth="673.0" style="-fx-background-color: #D8DEE9;">
         <columns>
-          <TableColumn prefWidth="75.0" text="Title" />
-          <TableColumn prefWidth="75.0" text="Description" />
-            <TableColumn prefWidth="75.0" text="Location" />
-            <TableColumn prefWidth="75.0" text="Contact" />
-            <TableColumn prefWidth="75.0" text="Type" />
-            <TableColumn prefWidth="75.0" text="Start Time" />
-            <TableColumn prefWidth="75.0" text="End Time" />
-            <TableColumn prefWidth="75.0" text="Customer " />
+          <TableColumn fx:id="titleColumn" prefWidth="75.0" text="Title" />
+          <TableColumn fx:id="descriptionColumn" prefWidth="75.0" text="Description" />
+            <TableColumn fx:id="locationColumn" prefWidth="75.0" text="Location" />
+            <TableColumn fx:id="contactColumn" prefWidth="75.0" text="Contact" />
+            <TableColumn fx:id="typeColumn" prefWidth="75.0" text="Type" />
+            <TableColumn fx:id="startTimeColumn" prefWidth="75.0" text="Start Time" />
+            <TableColumn fx:id="endTimeColumn" prefWidth="75.0" text="End Time" />
+            <TableColumn fx:id="customerColumn" prefWidth="75.0" text="Customer " />
         </columns>
       </TableView>
       <GridPane layoutX="42.0" layoutY="472.0" prefHeight="39.0" prefWidth="327.0">

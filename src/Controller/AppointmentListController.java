@@ -1,20 +1,29 @@
 package Controller;
 
+import DAO.DBCache;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Callback;
+import model.Appointment;
+import model.Customer;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.Iterator;
+
+import static DAO.DBCache.*;
 
 public class AppointmentListController {
 
@@ -22,7 +31,31 @@ public class AppointmentListController {
     private Button backButton;
 
     @FXML
-    private TableView<?> appointmentsTableView;
+    private TableView<Appointment> appointmentsTableView;
+
+    @FXML
+    private TableColumn<Appointment, String> titleColumn;
+
+    @FXML
+    private TableColumn<Appointment, String> descriptionColumn;
+
+    @FXML
+    private TableColumn<Appointment, String> locationColumn;
+
+    @FXML
+    private TableColumn<Appointment, String> contactColumn;
+
+    @FXML
+    private TableColumn<Appointment, String> typeColumn;
+
+    @FXML
+    private TableColumn<Appointment, String> startTimeColumn;
+
+    @FXML
+    private TableColumn<Appointment, String> endTimeColumn;
+
+    @FXML
+    private TableColumn<Appointment, String> customerColumn;
 
     @FXML
     private Button addNewAppointmentButton;
@@ -71,8 +104,63 @@ public class AppointmentListController {
         stage.setResizable(false);
     }
 
+    private void fillAppointmentTable() {
+        ObservableList<Appointment> appointmentsList = FXCollections.observableArrayList();
+        Collection<Appointment> appointmentsCollection = getInstance().getAppointmentHashMap().values();
+        Iterator<Appointment> iterator = appointmentsCollection.iterator();
+        while (iterator.hasNext()){
+            Appointment app = iterator.next();
+            LocalDate date = app.getStartTime().toLocalDate();
+            if (weekRadioButton.isSelected() && date.getYear() == LocalDate.now().getYear() &&
+                (date.getDayOfYear() - LocalDate.now().getDayOfYear()) <= 7){
+                appointmentsList.add(app);
+            } else if (monthRadioButton.isSelected() && date.getYear() == LocalDate.now().getYear() &&
+                       date.getMonth() == LocalDate.now().getMonth()){
+                appointmentsList.add(app);
+            } else {
+                appointmentsList.add(app);
+            }
+            appointmentsList.add(iterator.next());
+        }
+        appointmentsTableView.setItems(appointmentsList);
+        titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+        locationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
+
+        contactColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Appointment, String>, ObservableValue<String>>() {
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<Appointment, String> app) {
+                return app.getValue().getCustomer().getName();
+            }
+        });
+
+        typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+        startTimeColumn.setCellValueFactory(new PropertyValueFactory<>("startTime"));
+        endTimeColumn.setCellValueFactory(new PropertyValueFactory<>("endTime"));
+        customerColumn.setCellValueFactory(new PropertyValueFactory<>("customer"));
+    }
+
     @FXML
     public void initialize(){
+        fillAppointmentTable();
+
+        weekRadioButton.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+                fillAppointmentTable();
+            }
+        });
+
+        monthRadioButton.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+                fillAppointmentTable();
+            }
+        });
+
+        allRadioButton.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+                fillAppointmentTable();
+            }
+        });
+
 
         backButton.setOnAction(new EventHandler<ActionEvent>() {
         public void handle(ActionEvent event) {
@@ -103,4 +191,6 @@ public class AppointmentListController {
             }
         });
     }
+
+
 }

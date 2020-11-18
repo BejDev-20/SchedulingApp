@@ -1,6 +1,9 @@
 package Controller;
 
 import DAO.DBCache;
+import javafx.beans.Observable;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -8,13 +11,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import model.Customer;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 public class CustomerListController {
@@ -32,7 +38,19 @@ public class CustomerListController {
     private Button deleteCustomerButton;
 
     @FXML
-    private TableView<?> customerTableView;
+    private TableView<Customer> customerTableView;
+
+    @FXML
+    private TableColumn<Customer, String> customerNameColumn;
+
+    @FXML
+    private TableColumn<Customer, String> addressColumn;
+
+    @FXML
+    private TableColumn<Customer, String> postalCodeColumn;
+
+    @FXML
+    private TableColumn<Customer, String> phoneNumberColumn;
 
     private Stage stage;
     private Parent scene;
@@ -57,13 +75,31 @@ public class CustomerListController {
         stage.setResizable(false);
     }
 
-    private void fillCustomerTable(Collection<Customer> values){
+    /*private ObservableList<?> getObservableList(Collection<?> collection){
+        ObservableList<?> list = new ObservableList<collection.>();
+        Iterator<?> iterator = collection.iterator();
+        while (iterator.hasNext()){
 
+        }
+    }*/
+
+    private void fillCustomerTable(){
+        ObservableList<Customer> customersList = FXCollections.observableArrayList();
+        Collection<Customer> customersCollection = DBCache.getInstance().getCustomerHashMap().values();
+        Iterator<Customer> iterator = customersCollection.iterator();
+        while (iterator.hasNext()){
+            customersList.add(iterator.next());
+        }
+        customerTableView.setItems(customersList);
+        customerNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        addressColumn.setCellValueFactory(new PropertyValueFactory<>("address"));
+        postalCodeColumn.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
+        phoneNumberColumn.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
     }
 
     @FXML
     public void initialize(){
-        fillCustomerTable(DBCache.getInstance().getCustomerHashMap().values());
+        fillCustomerTable();
 
         backButton.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {

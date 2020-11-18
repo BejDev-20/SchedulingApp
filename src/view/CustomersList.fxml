@@ -65,10 +65,10 @@
       </GridPane>
       <TableView fx:id="customerTableView" layoutX="26.0" layoutY="101.0" prefHeight="282.0" prefWidth="550.0" style="-fx-background-color: #D8DEE9;">
          <columns>
-            <TableColumn prefWidth="75.0" text="Name" />
-            <TableColumn prefWidth="75.0" text="Address" />
-            <TableColumn prefWidth="75.0" text="Postal Code" />
-            <TableColumn prefWidth="75.0" text="Phone Number" />
+            <TableColumn fx:id="customerNameColumn" prefWidth="75.0" text="Name" />
+            <TableColumn fx:id="addressColumn" prefWidth="75.0" text="Address" />
+            <TableColumn fx:id="postalCodeColumn" prefWidth="75.0" text="Postal Code" />
+            <TableColumn fx:id="phoneNumberColumn" prefWidth="75.0" text="Phone Number" />
          </columns>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

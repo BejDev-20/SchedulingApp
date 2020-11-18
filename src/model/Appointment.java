@@ -1,5 +1,7 @@
 package model;
 
+import DAO.DBCache;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -13,8 +15,12 @@ public class Appointment {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private int customerId;
+    private Customer customer;
     private int userId;
+    private User user;
     private int contactId;
+    private Contact contact;
+
 
     public Appointment(int appointmentId, String title, String description, String location, String type,
                        LocalDateTime startTime, LocalDateTime endTime, int customerId, int userId, int contactId) {
@@ -26,8 +32,11 @@ public class Appointment {
         this.startTime = startTime;
         this.endTime = endTime;
         this.customerId = customerId;
+        this.customer = DBCache.getInstance().getCustomerHashMap().get(customerId);
         this.userId = userId;
+        this.user = DBCache.getInstance().getUserHashMap().get(userId);
         this.contactId = contactId;
+        this.contact = DBCache.getInstance().getContactHashMap().get(contactId);
     }
 
 
@@ -71,14 +80,6 @@ public class Appointment {
         this.startTime = startTime;
     }
 
-    public int getCustomer() {
-        return customerId;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customerId = customer.getCustomerId();
-    }
-
     public int getAppointmentId() {
         return appointmentId;
     }
@@ -103,9 +104,13 @@ public class Appointment {
         this.customerId = customerId;
     }
 
+    public Customer getCustomer(){ return customer;}
+
     public int getUserId() {
         return userId;
     }
+
+    public User getUser(){ return user;}
 
     public void setUserId(int userId) {
         this.userId = userId;
@@ -114,6 +119,8 @@ public class Appointment {
     public int getContactId() {
         return contactId;
     }
+
+    public Contact getContact(){ return contact;}
 
     public void setContactId(int contactId) {
         this.contactId = contactId;

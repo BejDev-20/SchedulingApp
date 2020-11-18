@@ -34,13 +34,9 @@ public class DAOMain extends Application {
 
     public static void main(String[] args) throws SQLException {
         DBConnection.startConnection();
-        //launch(args);
+        launch(args);
         DBCache cache = DBCache.getInstance();
-        Country country = cache.getCountryById(6);
-        System.out.println(country);
-        CountryDao countryDao = new CountryDao();
-        countryDao.delete(country);
-        System.out.println(cache.getCountryHashMap());
+
         DBConnection.closeConnection();
     }
 }
