@@ -36,7 +36,6 @@ public class DAOMain extends Application {
         DBConnection.startConnection();
         launch(args);
         DBCache cache = DBCache.getInstance();
-
         DBConnection.closeConnection();
     }
 }

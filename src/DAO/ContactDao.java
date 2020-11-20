@@ -15,7 +15,6 @@ public class ContactDao implements DAO<Contact> {
             String sql = "SELECT Contact_ID, Contact_Name, Email FROM contacts";
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
-
             while(rs.next()) {
                 int contactId = rs.getInt("Contact_ID");
                 String contactName = rs.getString("Contact_Name");

@@ -82,8 +82,7 @@ public class CustomerDao implements DAO<Customer>{
             psti.setString(8, getInstance().getUser().getName());
             psti.setInt(9, item.getDivisionId());
             psti.execute();
-            DBCache cache = DBCache.getInstance();
-            cache.updateCustomers();
+            DBCache.getInstance().updateCustomers();
         } catch (SQLException e){
             e.printStackTrace();
         }
@@ -105,8 +104,7 @@ public class CustomerDao implements DAO<Customer>{
             psti.setInt(7, item.getDivisionId());
             psti.setInt(8, item.getCustomerId());
             psti.execute();
-            DBCache cache = DBCache.getInstance();
-            cache.updateCustomers();
+            DBCache.getInstance().updateCustomers();
         } catch (SQLException e){
             e.printStackTrace();
         }

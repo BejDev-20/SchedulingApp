@@ -41,8 +41,7 @@ public class FirstLevelDiv {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FirstLevelDiv that = (FirstLevelDiv) o;
-        return divisionId == that.divisionId &&
-                countryId == that.countryId &&
+        return countryId == that.countryId &&
                 name.equals(that.name);
     }
 

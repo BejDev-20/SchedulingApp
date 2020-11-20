@@ -20,7 +20,6 @@ public class AppointmentDao implements DAO<Appointment>{
                          "WHERE appointments.Customer_ID = customers.Customer_ID AND appointments.User_ID = users.User_ID";
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
-
             while(rs.next()) {
                 int appId = rs.getInt("Appointment_ID");
                 String appTitle = rs.getString("Title");
@@ -93,9 +92,9 @@ public class AppointmentDao implements DAO<Appointment>{
             psti.setString(8, getInstance().getUser().getName());
             psti.setTimestamp(9, Timestamp.valueOf(LocalDateTime.now()));
             psti.setString(10, getInstance().getUser().getName());
-            psti.setInt(11, item.getCustomerId());
-            psti.setInt(12, item.getUserId());
-            psti.setInt(13, item.getContactId());
+            psti.setInt(11, item.getCustomer().getCustomerId());
+            psti.setInt(12, item.getUser().getUserId());
+            psti.setInt(13, item.getContact().getContactId());
             psti.execute();
             DBCache cache = DBCache.getInstance();
             cache.updateAppointments();
@@ -120,9 +119,9 @@ public class AppointmentDao implements DAO<Appointment>{
             psti.setTimestamp(6, Timestamp.valueOf(item.getEndTime()));
             psti.setTimestamp(7, Timestamp.valueOf(LocalDateTime.now())); // make sure the Time zone is correct
             psti.setString(8, getInstance().getUser().getName());
-            psti.setInt(9, item.getCustomerId());
-            psti.setInt(10, item.getUserId());
-            psti.setInt(11, item.getContactId());
+            psti.setInt(9, item.getCustomer().getCustomerId());
+            psti.setInt(10, item.getUser().getUserId());
+            psti.setInt(11, item.getContact().getContactId());
             psti.execute();
             DBCache cache = DBCache.getInstance();
             cache.updateAppointments();

@@ -43,13 +43,17 @@ public class Contact {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Contact contact = (Contact) o;
-        return contactId.equals(contact.contactId) &&
-                contactName.equals(contact.contactName) &&
+        return contactName.equals(contact.contactName) &&
                 contactEmail.equals(contact.contactEmail);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(contactId, contactName, contactEmail);
+    }
+
+    @Override
+    public String toString() {
+        return contactName;
     }
 }

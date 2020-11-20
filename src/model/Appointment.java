@@ -2,25 +2,48 @@ package model;
 
 import DAO.DBCache;
 
+import java.sql.Time;
 import java.time.LocalDateTime;
-import java.util.Objects;
+import java.time.LocalTime;
 
 public class Appointment {
 
-    private int appointmentId;
+    private static final LocalTime START_HOUR = LocalTime.of(8, 0);
+    private static final LocalTime END_HOUR = LocalTime.of(22, 0);
+    private Integer appointmentId;
     private String title;
     private String description;
     private String location;
     private String type;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private int customerId;
     private Customer customer;
-    private int userId;
     private User user;
-    private int contactId;
     private Contact contact;
 
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Contact getContact() {
+        return contact;
+    }
+
+    public void setContact(Contact contact) {
+        this.contact = contact;
+    }
 
     public Appointment(int appointmentId, String title, String description, String location, String type,
                        LocalDateTime startTime, LocalDateTime endTime, int customerId, int userId, int contactId) {
@@ -31,12 +54,9 @@ public class Appointment {
         this.type = type;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.customerId = customerId;
-        this.customer = DBCache.getInstance().getCustomerHashMap().get(customerId);
-        this.userId = userId;
-        this.user = DBCache.getInstance().getUserHashMap().get(userId);
-        this.contactId = contactId;
-        this.contact = DBCache.getInstance().getContactHashMap().get(contactId);
+        this.customer = DBCache.getCustomerHashMap().get(customerId);
+        this.user = DBCache.getUserHashMap().get(userId);
+        this.contact = DBCache.getContactHashMap().get(contactId);
     }
 
 
@@ -50,6 +70,18 @@ public class Appointment {
 
     public String getDescription() {
         return description;
+    }
+
+    public static LocalTime getSTART_HOUR() {
+        return START_HOUR;
+    }
+
+    public static LocalTime getEND_HOUR() {
+        return END_HOUR;
+    }
+
+    public void setAppointmentId(Integer appointmentId) {
+        this.appointmentId = appointmentId;
     }
 
     public void setDescription(String description) {
@@ -96,47 +128,16 @@ public class Appointment {
         this.endTime = endTime;
     }
 
-    public int getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
-    }
-
-    public Customer getCustomer(){ return customer;}
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public User getUser(){ return user;}
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public int getContactId() {
-        return contactId;
-    }
-
-    public Contact getContact(){ return contact;}
-
-    public void setContactId(int contactId) {
-        this.contactId = contactId;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Appointment that = (Appointment) o;
-        return appointmentId == that.appointmentId &&
-                customerId == that.customerId &&
-                userId == that.userId &&
-                contactId == that.contactId &&
+        return customer.equals(that.customer) &&
+                user.equals(that.user) &&
+                contact.equals(that.contact) &&
                 title.equals(that.title) &&
-                Objects.equals(description, that.description) &&
+                description.equals(that.description) &&
                 location.equals(that.location) &&
                 type.equals(that.type) &&
                 startTime.equals(that.startTime) &&
@@ -153,9 +154,9 @@ public class Appointment {
                 ", type='" + type + '\'' +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
-                ", customerId=" + customerId +
-                ", userId=" + userId +
-                ", contactId=" + contactId +
+                ", customer=" + customer +
+                ", user=" + user +
+                ", contact=" + contact +
                 '}';
     }
 }

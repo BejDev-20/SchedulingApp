@@ -31,8 +31,7 @@ public class Country {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Country country = (Country) o;
-        return countryId == country.countryId &&
-                name.equals(country.name);
+        return name.equals(country.name);
     }
 
     @Override

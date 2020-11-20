@@ -1,7 +1,7 @@
 package Controller;
 
 import DAO.DBCache;
-import javafx.beans.value.ObservableValue;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,8 +14,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import model.Appointment;
+import model.Contact;
 import model.Customer;
 
 import java.io.IOException;
@@ -58,6 +58,12 @@ public class AppointmentListController {
     private TableColumn<Appointment, String> customerColumn;
 
     @FXML
+    private TableColumn<Appointment, String> userColumn;
+
+    @FXML
+    private TableColumn<Appointment, Integer> idColumn;
+
+    @FXML
     private Button addNewAppointmentButton;
 
     @FXML
@@ -67,7 +73,7 @@ public class AppointmentListController {
     private Button deleteAppointmentButton;
 
     @FXML
-    private ComboBox<?> contactNameComboBox;
+    private ComboBox<Contact> contactNameComboBox;
 
     @FXML
     private Label contactNameLabel;
@@ -112,36 +118,71 @@ public class AppointmentListController {
             Appointment app = iterator.next();
             LocalDate date = app.getStartTime().toLocalDate();
             if (weekRadioButton.isSelected() && date.getYear() == LocalDate.now().getYear() &&
-                (date.getDayOfYear() - LocalDate.now().getDayOfYear()) <= 7){
+                LocalDate.now().getDayOfYear() - date.getDayOfYear() <= 7 &&
+                app.getContact().equals(contactNameComboBox.getSelectionModel().getSelectedItem())){
                 appointmentsList.add(app);
             } else if (monthRadioButton.isSelected() && date.getYear() == LocalDate.now().getYear() &&
-                       date.getMonth() == LocalDate.now().getMonth()){
+                    LocalDate.now().getMonth() == date.getMonth() &&
+                    app.getContact().equals(contactNameComboBox.getSelectionModel().getSelectedItem())){
                 appointmentsList.add(app);
-            } else {
+            } else if (allRadioButton.isSelected() &&
+                    app.getContact().equals(contactNameComboBox.getSelectionModel().getSelectedItem())){
                 appointmentsList.add(app);
             }
-            appointmentsList.add(iterator.next());
         }
         appointmentsTableView.setItems(appointmentsList);
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentId"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
         locationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
-
-        contactColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Appointment, String>, ObservableValue<String>>() {
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<Appointment, String> app) {
-                return app.getValue().getCustomer().getName();
-            }
-        });
-
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
         startTimeColumn.setCellValueFactory(new PropertyValueFactory<>("startTime"));
         endTimeColumn.setCellValueFactory(new PropertyValueFactory<>("endTime"));
-        customerColumn.setCellValueFactory(new PropertyValueFactory<>("customer"));
+
+        customerColumn.setCellValueFactory(data -> {
+            if (data.getValue() instanceof Appointment){
+                SimpleStringProperty simpleStringProperty = new SimpleStringProperty(data.getValue().getCustomer().getName());
+                return simpleStringProperty;
+            } else {
+                throw new RuntimeException("Unknown type.");
+            }
+        });
+
+        contactColumn.setCellValueFactory(data -> {
+            if (data.getValue() instanceof Appointment){
+                SimpleStringProperty simpleStringProperty = new SimpleStringProperty((String) data.getValue().getContact().getContactName());
+                return simpleStringProperty;
+            } else {
+                throw new RuntimeException("Unknown type.");
+            }
+        });
+
+        userColumn.setCellValueFactory(data -> {
+            if (data.getValue() instanceof Appointment){
+                SimpleStringProperty simpleStringProperty = new SimpleStringProperty((String) data.getValue().getUser().getName());
+                return simpleStringProperty;
+            } else {
+                throw new RuntimeException("Unknown type.");
+            }
+        });
     }
 
     @FXML
     public void initialize(){
+
         fillAppointmentTable();
+
+        ObservableList<Contact> contactsList = FXCollections.observableArrayList();
+        Collection<Contact> contactsCollection = DBCache.getInstance().getContactHashMap().values();
+        Iterator<Contact> iterator = contactsCollection.iterator();
+        while (iterator.hasNext()){
+            contactsList.add(iterator.next());
+        }
+        contactNameComboBox.setItems(contactsList);
+        contactNameComboBox.getSelectionModel().selectFirst();
+        contactNameComboBox.setOnAction(comboBox -> {
+            fillAppointmentTable();
+        });
 
         weekRadioButton.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
@@ -178,19 +219,35 @@ public class AppointmentListController {
             }
         });
 
-        updateAppointmentButton.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                stage = getStage("../view/AddAppointment.fxml", event);
-                stage.show();
-                setWindowPosition();
-            }
-        });
-
         deleteAppointmentButton.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
             }
         });
     }
 
+    @FXML
+    void onActionDelete(ActionEvent event) {
+
+    }
+
+    @FXML
+    void onActionUpdate(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("../view/AddAppointment.fxml"));
+            loader.load();
+            AddAppointmentController addAppointmentController = loader.getController();
+            if (!(appointmentsTableView.getSelectionModel().isEmpty())){
+                addAppointmentController.populateAppointmentData((Appointment) appointmentsTableView.getSelectionModel().getSelectedItem());
+                stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+                Parent scene = loader.getRoot();
+                stage.setScene(new Scene(scene));
+                stage.show();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 }

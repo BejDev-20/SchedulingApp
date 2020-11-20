@@ -16,23 +16,22 @@ import java.util.HashMap;
 public class DBCache {
 
     private User currentUser;
-    private HashMap<Integer, Customer> customerHashMap = new HashMap<>();
-    private HashMap<Integer, Appointment> appointmentHashMap = new HashMap<>();
-    private HashMap<Integer, User> userHashMap = new HashMap<>();
-    private HashMap<Integer, FirstLevelDiv> firstLevelDivHashMap = new HashMap<>();
-    private HashMap<Integer, Country> countryHashMap = new HashMap<>();
-    private HashMap<Integer, Contact> contactHashMap = new HashMap<>();
+    private static HashMap<Integer, Customer> customerHashMap = new HashMap<>();
+    private static HashMap<Integer, Appointment> appointmentHashMap = new HashMap<>();
+    private static HashMap<Integer, User> userHashMap = new HashMap<>();
+    private static HashMap<Integer, FirstLevelDiv> firstLevelDivHashMap = new HashMap<>();
+    private static HashMap<Integer, Country> countryHashMap = new HashMap<>();
+    private static HashMap<Integer, Contact> contactHashMap = new HashMap<>();
 
     private static DBCache single_instance = null;
 
     private DBCache(){
-        updateAllCache();
         currentUser = null;
     }
 
     public static DBCache getInstance(){
         if (single_instance == null){
-            single_instance = new DBCache();
+            updateAllCache();
         }
         return single_instance;
     }
@@ -45,16 +44,16 @@ public class DBCache {
         return currentUser;
     }
 
-    public void updateAllCache(){
+    public static void updateAllCache(){
+        updateContacts();
         updateCustomers();
         updateUsers();
         updateCountries();
-        loadFirstLevelDiv();
+        updateFirstLevelDiv();
         updateAppointments();
-        updateContacts();
     }
 
-    public void updateAppointments() {
+    public static void updateAppointments() {
         AppointmentDao appointmentDao = new AppointmentDao();
         ObservableList<Appointment> appointments = appointmentDao.getAll();
         appointmentHashMap.clear();
@@ -63,7 +62,7 @@ public class DBCache {
         }
     }
 
-    public void loadFirstLevelDiv() {
+    public static void updateFirstLevelDiv() {
         FirstLevelDivDao firstLevelDivDao = new FirstLevelDivDao();
         ObservableList<FirstLevelDiv> firstLevelDivs = firstLevelDivDao.getAll();
         firstLevelDivHashMap.clear();
@@ -72,7 +71,7 @@ public class DBCache {
         }
     }
 
-    public void updateCountries() {
+    public static void updateCountries() {
         CountryDao countryDao = new CountryDao();
         ObservableList<Country> countries = countryDao.getAll();
         countryHashMap.clear();
@@ -81,7 +80,7 @@ public class DBCache {
         }
     }
 
-    public void updateUsers() {
+    public static void updateUsers() {
         UsersDao usersDao = new UsersDao();
         ObservableList<User> users = usersDao.getAll();
         userHashMap.clear();
@@ -90,7 +89,7 @@ public class DBCache {
         }
     }
 
-    public void updateCustomers(){
+    public static void updateCustomers(){
         CustomerDao customerDao = new CustomerDao();
         ObservableList<Customer> customers = customerDao.getAll();
         customerHashMap.clear();
@@ -99,16 +98,7 @@ public class DBCache {
         }
     }
 
-    public void updateFirstLevelDivision(){
-        FirstLevelDivDao firstLevelDivDao = new FirstLevelDivDao();
-        ObservableList<FirstLevelDiv> firstLevelDivs = firstLevelDivDao.getAll();
-        firstLevelDivHashMap.clear();
-        for (FirstLevelDiv firstLevelDiv : firstLevelDivs) {
-            firstLevelDivHashMap.put(firstLevelDiv.getDivisionId(), firstLevelDiv);
-        }
-    }
-
-    public void updateContacts(){
+    public static void updateContacts(){
         ContactDao contactDao = new ContactDao();
         ObservableList<Contact> contacts = contactDao.getAll();
         contactHashMap.clear();
@@ -117,7 +107,7 @@ public class DBCache {
         }
     }
 
-    public Appointment getAppById(int id){
+    public static Appointment getAppById(int id){
         Appointment app = appointmentHashMap.get(id);
         if (app == null){
             AppointmentDao appointmentDao = new AppointmentDao();
@@ -126,7 +116,7 @@ public class DBCache {
         return app;
     }
 
-    public Customer getCustomerById(int id){
+    public static Customer getCustomerById(int id){
         Customer customer = customerHashMap.get(id);
         if (customer == null){
             CustomerDao customerDao = new CustomerDao();
@@ -135,7 +125,7 @@ public class DBCache {
         return customer;
     }
 
-    public User getUserById(int id){
+    public static User getUserById(int id){
         User user = userHashMap.get(id);
         if (user == null){
             UsersDao usersDao = new UsersDao();
@@ -144,7 +134,7 @@ public class DBCache {
         return user;
     }
 
-    public Country getCountryById(int id){
+    public static Country getCountryById(int id){
         Country country = countryHashMap.get(id);
         if (country == null){
             CountryDao countryDao = new CountryDao();
@@ -153,7 +143,7 @@ public class DBCache {
         return country;
     }
 
-    public FirstLevelDiv getFirstLevelDivById(int id){
+    public static FirstLevelDiv getFirstLevelDivById(int id){
         FirstLevelDiv firstLevelDiv = firstLevelDivHashMap.get(id);
         if (firstLevelDiv == null){
             FirstLevelDivDao firstLevelDivDao = new FirstLevelDivDao();
@@ -162,27 +152,36 @@ public class DBCache {
         return firstLevelDiv;
     }
 
-    public HashMap<Integer, Customer> getCustomerHashMap() {
+    public static Contact getContactById(int id){
+        Contact contact = contactHashMap.get(id);
+        if (contact == null){
+            ContactDao contactDao = new ContactDao();
+            contact = contactDao.getById(id);
+        }
+        return contact;
+    }
+
+    public static HashMap<Integer, Customer> getCustomerHashMap() {
         return customerHashMap;
     }
 
-    public HashMap<Integer, Appointment> getAppointmentHashMap() {
+    public static HashMap<Integer, Appointment> getAppointmentHashMap() {
         return appointmentHashMap;
     }
 
-    public HashMap<Integer, User> getUserHashMap() {
+    public static HashMap<Integer, User> getUserHashMap() {
         return userHashMap;
     }
 
-    public HashMap<Integer, Country> getCountryHashMap(){
+    public static HashMap<Integer, Country> getCountryHashMap(){
         return countryHashMap;
     }
 
-    public HashMap<Integer, FirstLevelDiv> getFirstLevelDivHashMap() {
+    public static HashMap<Integer, FirstLevelDiv> getFirstLevelDivHashMap() {
         return firstLevelDivHashMap;
     }
 
-    public HashMap<Integer, Contact> getContactHashMap() {
+    public static HashMap<Integer, Contact> getContactHashMap() {
         return contactHashMap;
     }
 }

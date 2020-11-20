@@ -54,7 +54,7 @@ public class FirstLevelDivDao implements DAO<FirstLevelDiv> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        if (firstLevelDiv != null) DBCache.getInstance().updateFirstLevelDivision();
+        if (firstLevelDiv != null) DBCache.getInstance().updateFirstLevelDiv();
         return firstLevelDiv;
     }
 
@@ -70,7 +70,7 @@ public class FirstLevelDivDao implements DAO<FirstLevelDiv> {
             psti.setString(5, getInstance().getUser().getName());
             psti.setInt(6, item.getCountryId());
             psti.execute();
-            DBCache.getInstance().updateFirstLevelDivision();
+            DBCache.getInstance().updateFirstLevelDiv();
         } catch (SQLException e){
             e.printStackTrace();
         }
@@ -88,7 +88,7 @@ public class FirstLevelDivDao implements DAO<FirstLevelDiv> {
             psti.setString(3, getInstance().getUser().getName());
             psti.setInt(4, item.getCountryId());
             psti.execute();
-            DBCache.getInstance().updateFirstLevelDivision();
+            DBCache.getInstance().updateFirstLevelDiv();
         } catch (SQLException e){
             e.printStackTrace();
         }
@@ -102,7 +102,7 @@ public class FirstLevelDivDao implements DAO<FirstLevelDiv> {
             PreparedStatement psti = DBConnection.getConn().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             psti.setInt(1, item.getDivisionId());
             psti.execute();
-            DBCache.getInstance().updateFirstLevelDivision();
+            DBCache.getInstance().updateFirstLevelDiv();
         } catch (SQLException e){
             e.printStackTrace();
         }
