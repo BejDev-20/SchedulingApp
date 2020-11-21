@@ -56,7 +56,8 @@ public class LoginController {
                 String username = usernameTextField.getText();
                 String password = passwordTextField.getText();
                 User user = new User(0, username, password);
-                if (searchForUser(user)){
+                System.out.println(user);
+                if (searchForUser(user) != null){
                     stage = getStage("../view/MainMenu.fxml", event);
                     stage.show();
                 }
@@ -77,15 +78,17 @@ public class LoginController {
      * @param user
      * @return
      */
-    private boolean searchForUser(User user) {
+    private User searchForUser(User user) {
         DBCache dbCache = DBCache.getInstance();
         HashMap<Integer, User> users = dbCache.getUserHashMap();
         for(User oneUser : users.values()){
             if(oneUser.equals(user)){
-                return true;
+                DBCache.getInstance().setUser(oneUser);
+                System.out.println(oneUser);
+                return oneUser;
+            }
         }
-        }
-        return false;
+        return null;
     }
 
 

@@ -1,5 +1,6 @@
 package Controller;
 
+import DAO.AppointmentDao;
 import DAO.DBCache;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -118,11 +119,12 @@ public class AppointmentListController {
             Appointment app = iterator.next();
             LocalDate date = app.getStartTime().toLocalDate();
             if (weekRadioButton.isSelected() && date.getYear() == LocalDate.now().getYear() &&
-                LocalDate.now().getDayOfYear() - date.getDayOfYear() <= 7 &&
+                date.getDayOfYear() - LocalDate.now().getDayOfYear() <= 7 &&
+                date.getDayOfYear() - LocalDate.now().getDayOfYear() >= 0 &&
                 app.getContact().equals(contactNameComboBox.getSelectionModel().getSelectedItem())){
                 appointmentsList.add(app);
             } else if (monthRadioButton.isSelected() && date.getYear() == LocalDate.now().getYear() &&
-                    LocalDate.now().getMonth() == date.getMonth() &&
+                    LocalDate.now().getMonth().equals(date.getMonth()) &&
                     app.getContact().equals(contactNameComboBox.getSelectionModel().getSelectedItem())){
                 appointmentsList.add(app);
             } else if (allRadioButton.isSelected() &&
@@ -169,9 +171,6 @@ public class AppointmentListController {
 
     @FXML
     public void initialize(){
-
-        fillAppointmentTable();
-
         ObservableList<Contact> contactsList = FXCollections.observableArrayList();
         Collection<Contact> contactsCollection = DBCache.getInstance().getContactHashMap().values();
         Iterator<Contact> iterator = contactsCollection.iterator();
@@ -219,15 +218,14 @@ public class AppointmentListController {
             }
         });
 
-        deleteAppointmentButton.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
+        deleteAppointmentButton.setOnAction(event -> {
+            if (!(appointmentsTableView.getSelectionModel().isEmpty())) {
+                AppointmentDao appointmentDao = new AppointmentDao();
+                appointmentDao.delete(appointmentsTableView.getSelectionModel().getSelectedItem());
+                fillAppointmentTable();
             }
         });
-    }
-
-    @FXML
-    void onActionDelete(ActionEvent event) {
-
+        fillAppointmentTable();
     }
 
     @FXML
@@ -238,7 +236,7 @@ public class AppointmentListController {
             loader.load();
             AddAppointmentController addAppointmentController = loader.getController();
             if (!(appointmentsTableView.getSelectionModel().isEmpty())){
-                addAppointmentController.populateAppointmentData((Appointment) appointmentsTableView.getSelectionModel().getSelectedItem());
+                addAppointmentController.populateAppointmentData(appointmentsTableView.getSelectionModel().getSelectedItem());
                 stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
                 Parent scene = loader.getRoot();
                 stage.setScene(new Scene(scene));

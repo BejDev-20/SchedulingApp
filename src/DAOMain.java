@@ -34,8 +34,9 @@ public class DAOMain extends Application {
 
     public static void main(String[] args) throws SQLException {
         DBConnection.startConnection();
-        launch(args);
         DBCache cache = DBCache.getInstance();
+        System.out.println(cache.getUser());
+        launch(args);
         DBConnection.closeConnection();
     }
 }

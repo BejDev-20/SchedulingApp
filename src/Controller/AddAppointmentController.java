@@ -144,6 +144,7 @@ public class AddAppointmentController {
             contactsList.add(iterator.next());
         }
         contactComboBox.setItems(contactsList);
+        contactComboBox.getSelectionModel().selectFirst();
 
         ObservableList<LocalTime> startTimes = setUpTime(Appointment.getSTART_HOUR(), Appointment.getEND_HOUR());
         ObservableList<LocalTime> endTimes = setUpTime(Appointment.getSTART_HOUR().plusMinutes(15), Appointment.getEND_HOUR().plusMinutes(30));
@@ -209,14 +210,11 @@ public class AddAppointmentController {
         LocalDate date = datePicker.getValue();
         LocalTime startTime = startTimeComboBox.getValue();
         LocalTime endTime = endTimeComboBox.getValue();
-        LocalDateTime startDateTime = LocalDateTime.of(date.getYear(), date.getMonth(),
-                date.getDayOfMonth(), startTime.getHour(), startTime.getMinute());
-        LocalDateTime endDateTime = LocalDateTime.of(date.getYear(), date.getMonth(),
-                date.getDayOfMonth(), endTime.getHour(), endTime.getMinute());
+        LocalDateTime startDateTime = LocalDateTime.of(date, startTime);
+        LocalDateTime endDateTime = LocalDateTime.of(date, endTime);
         int customerId = customersComboBox.getSelectionModel().getSelectedItem().getCustomerId();
-        System.out.println(DBCache.getInstance().getUser().getUserId());
         int userId = DBCache.getInstance().getUser().getUserId();
-        Appointment app = new Appointment(Integer.parseInt(appointmentTextField.getText()),
+        Appointment app = new Appointment(0,
                 titleTextField.getText(),
                 descriptionTextArea.getText(),
                 locationTextField.getText(),

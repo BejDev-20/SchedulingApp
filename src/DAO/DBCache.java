@@ -31,6 +31,7 @@ public class DBCache {
 
     public static DBCache getInstance(){
         if (single_instance == null){
+            single_instance = new DBCache();
             updateAllCache();
         }
         return single_instance;

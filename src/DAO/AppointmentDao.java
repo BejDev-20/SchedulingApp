@@ -107,7 +107,7 @@ public class AppointmentDao implements DAO<Appointment>{
     @Override
     public boolean update(Appointment item) {
         try {
-            String sql = "UPDATE appointment SET Title=?, Description=?, Location=?, Type=?, Start=?, End=?, " +
+            String sql = "UPDATE appointments SET Title=?, Description=?, Location=?, Type=?, Start=?, End=?, " +
                          "Last_Update=?, Last_Updated_By=?, Customer_ID=?, User_ID=?, Contact_ID=? " +
                          "WHERE Appointment_ID = " + item.getAppointmentId();
             PreparedStatement psti = DBConnection.getConn().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
