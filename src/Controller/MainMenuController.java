@@ -1,7 +1,6 @@
 package Controller;
 
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -28,6 +27,12 @@ public class MainMenuController {
     private Stage stage;
     private Parent scene;
 
+    /**
+     * Retrieves the stage from the given path and event
+     * @param FXMLPath path of the FXML document to set up the next scene
+     * @param event that triggers the action
+     * @return the stage from the given path and event
+     */
     private Stage getStage(String FXMLPath, ActionEvent event){
         stage = (Stage)((Button)event.getSource()).getScene().getWindow();
         try {
@@ -40,6 +45,9 @@ public class MainMenuController {
         return stage;
     }
 
+    /**
+     * Calculates and sets the position of the current scene to show it on the desktop
+     */
     private void setWindowPosition(){
         double x = (Screen.getPrimary().getBounds().getWidth() - scene.getBoundsInParent().getWidth())/2;
         double y = (Screen.getPrimary().getBounds().getHeight() - scene.getBoundsInParent().getHeight())/2;
@@ -48,41 +56,34 @@ public class MainMenuController {
         stage.setResizable(false);
     }
 
+    /**
+     * Called to initialize the controller after its root element has been completely processed
+     * Sets up customers, appointments, add customer, and add appointment buttons
+     */
     @FXML
     public void initialize(){
-        addCustomerButton.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                stage = getStage("../view/AddCustomer.fxml", event);
-                stage.show();
-                setWindowPosition();
-            }
+        addCustomerButton.setOnAction(event -> {
+            stage = getStage("../view/AddCustomer.fxml", event);
+            stage.show();
+            setWindowPosition();
         });
 
-        customersButton.setOnAction(new EventHandler<ActionEvent>() {
-
-            public void handle(ActionEvent event) {
-                stage = getStage("../view/CustomersList.fxml", event);
-                stage.show();
-                setWindowPosition();
-            }
+        customersButton.setOnAction(event -> {
+            stage = getStage("../view/CustomersList.fxml", event);
+            stage.show();
+            setWindowPosition();
         });
 
-        appointmentsButton.setOnAction(new EventHandler<ActionEvent>() {
-
-            public void handle(ActionEvent event) {
-                stage = getStage("../view/AppointmentsList.fxml", event);
-                stage.show();
-                setWindowPosition();
-            }
+        appointmentsButton.setOnAction(event -> {
+            stage = getStage("../view/AppointmentsList.fxml", event);
+            stage.show();
+            setWindowPosition();
         });
 
-        addAppointmentButton.setOnAction(new EventHandler<ActionEvent>() {
-
-            public void handle(ActionEvent event) {
-                stage = getStage("../view/AddAppointment.fxml", event);
-                stage.show();
-                setWindowPosition();
-            }
+        addAppointmentButton.setOnAction(event -> {
+            stage = getStage("../view/AddAppointment.fxml", event);
+            stage.show();
+            setWindowPosition();
         });
 
     }

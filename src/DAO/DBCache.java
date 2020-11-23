@@ -2,15 +2,9 @@ package DAO;
 
 import javafx.collections.ObservableList;
 import model.*;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
 
 /**
- * IMPLEMENT SINGLETON
  * Think of implementing the timer to update the cache periodically
  */
 public class DBCache {

@@ -9,11 +9,10 @@ import java.sql.*;
 public class ContactDao implements DAO<Contact> {
     @Override
     public ObservableList<Contact> getAll() {
-        Connection conn = DBConnection.getConn();
         ObservableList<Contact> allContacts = FXCollections.observableArrayList();
         try{
             String sql = "SELECT Contact_ID, Contact_Name, Email FROM contacts";
-            PreparedStatement ps = conn.prepareStatement(sql);
+            PreparedStatement ps = DBConnection.getConn().prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
                 int contactId = rs.getInt("Contact_ID");
@@ -30,11 +29,10 @@ public class ContactDao implements DAO<Contact> {
 
     @Override
     public Contact getById(int id) {
-        Connection conn = DBConnection.getConn();
         Contact contact = null;
         try{
             String sql = "SELECT Contact_ID, Contact_Name, Email FROM contacts WHERE Contact_ID = " + id;
-            PreparedStatement ps = conn.prepareStatement(sql);
+            PreparedStatement ps = DBConnection.getConn().prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
                 if(id == rs.getInt("Contact_ID")) {

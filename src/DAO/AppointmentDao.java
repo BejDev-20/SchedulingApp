@@ -12,13 +12,12 @@ public class AppointmentDao implements DAO<Appointment>{
 
     @Override
     public ObservableList<Appointment> getAll() {
-        Connection conn = DBConnection.getConn();
         ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
         try{
             String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, " +
                          "appointments.Customer_ID, appointments.User_ID, Contact_ID FROM appointments, customers, users " +
                          "WHERE appointments.Customer_ID = customers.Customer_ID AND appointments.User_ID = users.User_ID";
-            PreparedStatement ps = conn.prepareStatement(sql);
+            PreparedStatement ps = DBConnection.getConn().prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
                 int appId = rs.getInt("Appointment_ID");
@@ -43,14 +42,13 @@ public class AppointmentDao implements DAO<Appointment>{
 
     @Override
     public Appointment getById(int id) {
-        Connection conn = DBConnection.getConn();
         Appointment appointment = null;
         try{
             String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, " +
                     "appointments.Customer_ID, appointments.User_ID, Contact_ID FROM appointments, customers, users " +
                     "WHERE appointments.Customer_ID = customers.Customer_ID AND appointments.User_ID = users.User_ID " +
                     "AND Appointment_ID = " + id;
-            PreparedStatement ps = conn.prepareStatement(sql);
+            PreparedStatement ps = DBConnection.getConn().prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
 
             while(rs.next()) {
@@ -107,6 +105,7 @@ public class AppointmentDao implements DAO<Appointment>{
     @Override
     public boolean update(Appointment item) {
         try {
+            DBConnection.getConn();
             String sql = "UPDATE appointments SET Title=?, Description=?, Location=?, Type=?, Start=?, End=?, " +
                          "Last_Update=?, Last_Updated_By=?, Customer_ID=?, User_ID=?, Contact_ID=? " +
                          "WHERE Appointment_ID = " + item.getAppointmentId();

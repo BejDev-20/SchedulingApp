@@ -1,28 +1,30 @@
 package Controller;
 
+import DAO.CustomerDao;
 import DAO.DBCache;
-import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import model.Appointment;
 import model.Customer;
-
+import model.FirstLevelDiv;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Optional;
 
+/**
+ * Responsible for the control of the customer list view. Sets up all the button controls and provides functionality
+ * for adding, updating, and deleting customers.
+ */
 public class CustomerListController {
 
     @FXML
@@ -52,9 +54,18 @@ public class CustomerListController {
     @FXML
     private TableColumn<Customer, String> phoneNumberColumn;
 
+    @FXML
+    private TableColumn<Customer, FirstLevelDiv> divisionIdColumn;
+
     private Stage stage;
     private Parent scene;
 
+    /**
+     * Retrieves the stage from the given path and event
+     * @param FXMLPath path of the FXML document to set up the next scene
+     * @param event that triggers the action
+     * @return the stage from the given path and event
+     */
     private Stage getStage(String FXMLPath, ActionEvent event){
         stage = (Stage)((Button)event.getSource()).getScene().getWindow();
         try {
@@ -67,6 +78,9 @@ public class CustomerListController {
         return stage;
     }
 
+    /**
+     * Calculates and sets the position of the current scene to show it on the desktop
+     */
     private void setWindowPosition(){
         double x = (Screen.getPrimary().getBounds().getWidth() - scene.getBoundsInParent().getWidth())/2;
         double y = (Screen.getPrimary().getBounds().getHeight() - scene.getBoundsInParent().getHeight())/2;
@@ -75,14 +89,9 @@ public class CustomerListController {
         stage.setResizable(false);
     }
 
-    /*private ObservableList<?> getObservableList(Collection<?> collection){
-        ObservableList<?> list = new ObservableList<collection.>();
-        Iterator<?> iterator = collection.iterator();
-        while (iterator.hasNext()){
-
-        }
-    }*/
-
+    /**
+     * Fills the customer table with data from all the customers from the DB
+     */
     private void fillCustomerTable(){
         ObservableList<Customer> customersList = FXCollections.observableArrayList();
         Collection<Customer> customersCollection = DBCache.getInstance().getCustomerHashMap().values();
@@ -95,41 +104,116 @@ public class CustomerListController {
         addressColumn.setCellValueFactory(new PropertyValueFactory<>("address"));
         postalCodeColumn.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
         phoneNumberColumn.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
+        divisionIdColumn.setCellValueFactory(new PropertyValueFactory<>("division"));
     }
 
+    /**
+     * Called to initialize a controller after its root element has been completely processed
+     * Sets up add/delete/back buttons and fills up the customer table
+     */
     @FXML
     public void initialize(){
+        setAddNewCustomerButton();
+        setDeleteCustomerButton();
+        setBackButton();
         fillCustomerTable();
+    }
 
-        backButton.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                stage = getStage("../view/MainMenu.fxml", event);
+    /**
+     * Sets up functionality for the add new customer button by switching the scene to the add customer
+     */
+    private void setAddNewCustomerButton(){
+        addNewCustomerButton.setOnAction(event -> {
+            stage = getStage("../view/AddCustomer.fxml", event);
+            stage.show();
+            setWindowPosition();
+        });
+    }
+
+    /**
+     * Sets up the functionality for the update button, changes the scene to the add customer populating selected
+     * customer data
+     * @param event event that triggered the actions
+     * @throws IOException if there is an issue with connecting to the DB or retrieving the data
+     */
+    @FXML
+    private void onActionUpdate(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("../view/AddCustomer.fxml"));
+            loader.load();
+            AddCustomerController addCustomerController = loader.getController();
+            if (!(customerTableView.getSelectionModel().isEmpty())){
+                addCustomerController.populateCustomerData(customerTableView.getSelectionModel().getSelectedItem());
+                stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+                Parent scene = loader.getRoot();
+                stage.setScene(new Scene(scene));
                 stage.show();
-                setWindowPosition();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Sets up delete button and prompts confirmation alert as well as informational one in case the customer cannot
+     * be deleted due to appointments associated with that customer
+     */
+    private void setDeleteCustomerButton() {
+        deleteCustomerButton.setOnAction(event -> {
+            if (!(customerTableView.getSelectionModel().isEmpty())) {
+                Alert deleteConfirmation = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to delete the customer?");
+                deleteConfirmation.setTitle("Confirmation");
+                deleteConfirmation.setResizable(false);
+                Optional<ButtonType> result = deleteConfirmation.showAndWait();
+                if (result.isPresent() & result.get() == ButtonType.OK) {
+                    Customer customer = customerTableView.getSelectionModel().getSelectedItem();
+                    if (hasAppointments(customer)){
+                        var alert = new Alert(Alert.AlertType.ERROR, "Customers who have appointments cannot be deleted");
+                        alert.setTitle("Delete Error");
+                        alert.setResizable(false);
+                        alert.show();
+                    } else {
+                        CustomerDao customerDao = new CustomerDao();
+                        customerDao.delete(customerTableView.getSelectionModel().getSelectedItem());
+                        fillCustomerTable();
+                        var alert = new Alert(Alert.AlertType.INFORMATION, "Customer " + customer.getName() +
+                                " has been deleted.");
+                        alert.setTitle("Deleted");
+                        alert.setResizable(false);
+                        alert.show();
+                    }
+                }
             }
         });
+    }
 
-        addNewCustomerButton.setOnAction(new EventHandler<ActionEvent>() {
-
-            public void handle(ActionEvent event) {
-                stage = getStage("../view/AddCustomer.fxml", event);
-                stage.show();
-                setWindowPosition();
+    /**
+     * Checks if the customer has any appointments associated with it
+     * @param customer customer to check if any appointments are associated with it
+     * @return true if customer has appoiintments associated, false otherwise
+     */
+    private boolean hasAppointments(Customer customer){
+        boolean hasApps = false;
+        Collection<Appointment> appointments = DBCache.getAppointmentHashMap().values();
+        Iterator<Appointment> iterator = appointments.iterator();
+        while (iterator.hasNext()){
+            if (iterator.next().getCustomer().equals(customer)){
+                hasApps = true;
+                break;
             }
-        });
+        }
+        return hasApps;
+    }
 
-        updateCustomerButton.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-                stage = getStage("../view/AddCustomer.fxml", event);
-                stage.show();
-                setWindowPosition();
-            }
-        });
-
-        deleteCustomerButton.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-
-            }
+    /**
+     * Sets up back button to switch the scene to the Main menu
+     */
+    private void setBackButton(){
+        backButton.setOnAction(event -> {
+            stage = getStage("../view/MainMenu.fxml", event);
+            stage.show();
+            setWindowPosition();
         });
     }
 }

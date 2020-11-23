@@ -14,11 +14,10 @@ public class FirstLevelDivDao implements DAO<FirstLevelDiv> {
 
     @Override
     public ObservableList<FirstLevelDiv> getAll() {
-        Connection conn = DBConnection.getConn();
         ObservableList<FirstLevelDiv> allFirstLevelDiv = FXCollections.observableArrayList();
         try{
             String sql = "SELECT Division_ID, Division, COUNTRY_ID FROM first_level_divisions";
-            PreparedStatement ps = conn.prepareStatement(sql);
+            PreparedStatement ps = DBConnection.getConn().prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
 
             while(rs.next()) {
@@ -37,11 +36,10 @@ public class FirstLevelDivDao implements DAO<FirstLevelDiv> {
 
     @Override
     public FirstLevelDiv getById(int id) {
-        Connection conn = DBConnection.getConn();
         FirstLevelDiv firstLevelDiv = null;
         try{
             String sql = "SELECT Division_ID, Division, COUNTRY_ID FROM first_level_divisions WHERE Division_ID = " + id;
-            PreparedStatement ps = conn.prepareStatement(sql);
+            PreparedStatement ps = DBConnection.getConn().prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
                 if(id == rs.getInt("Division_ID")) {
@@ -68,7 +66,7 @@ public class FirstLevelDivDao implements DAO<FirstLevelDiv> {
             psti.setString(3, getInstance().getUser().getName());
             psti.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
             psti.setString(5, getInstance().getUser().getName());
-            psti.setInt(6, item.getCountryId());
+            psti.setInt(6, item.getCountry().getCountryId());
             psti.execute();
             DBCache.getInstance().updateFirstLevelDiv();
         } catch (SQLException e){
@@ -86,7 +84,7 @@ public class FirstLevelDivDao implements DAO<FirstLevelDiv> {
             psti.setString(1, item.getName());
             psti.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
             psti.setString(3, getInstance().getUser().getName());
-            psti.setInt(4, item.getCountryId());
+            psti.setInt(4, item.getCountry().getCountryId());
             psti.execute();
             DBCache.getInstance().updateFirstLevelDiv();
         } catch (SQLException e){

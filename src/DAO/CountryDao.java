@@ -12,11 +12,10 @@ public class CountryDao implements DAO<Country> {
 
     @Override
     public ObservableList<Country> getAll() {
-        Connection conn = DBConnection.getConn();
         ObservableList<Country> allCountries = FXCollections.observableArrayList();
         try{
             String sql = "SELECT Country_ID, Country FROM countries";
-            PreparedStatement ps = conn.prepareStatement(sql);
+            PreparedStatement ps = DBConnection.getConn().prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
 
             while(rs.next()) {
@@ -33,11 +32,10 @@ public class CountryDao implements DAO<Country> {
 
     @Override
     public Country getById(int id) {
-        Connection conn = DBConnection.getConn();
         Country country = null;
         try{
             String sql = "SELECT Country_ID, Country FROM countries WHERE Country_ID = " + id;
-            PreparedStatement ps = conn.prepareStatement(sql);
+            PreparedStatement ps = DBConnection.getConn().prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
                 if(id == rs.getInt("Country_ID")) {

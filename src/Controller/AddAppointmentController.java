@@ -9,18 +9,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import model.Appointment;
 import model.Contact;
 import model.Customer;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,6 +22,11 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+/**
+ * Responsible for the control of the form to add an appointment. Provides necessary text field and combo boxes to fill out
+ * and choose appropriate data. Sets up save/back buttons. Eliminates the text fields to a particular limit
+ * @author Iulia Bejsovec
+ */
 public class AddAppointmentController {
 
     @FXML
@@ -35,27 +34,6 @@ public class AddAppointmentController {
 
     @FXML
     private Button cancelButton;
-
-    @FXML
-    private Label descriptionLabel;
-
-    @FXML
-    private Label appointmentIdLabel;
-
-    @FXML
-    private Label titleLabel;
-
-    @FXML
-    private Label contactLabel;
-
-    @FXML
-    private Label typeLabel;
-
-    @FXML
-    private Label startDateLabel;
-
-    @FXML
-    private Label endDateLabel;
 
     @FXML
     private TextField appointmentTextField;
@@ -76,16 +54,10 @@ public class AddAppointmentController {
     private TextField locationTextField;
 
     @FXML
-    private Label locationLabel;
-
-    @FXML
     private ComboBox<LocalTime> startTimeComboBox;
 
     @FXML
     private ComboBox<LocalTime> endTimeComboBox;
-
-    @FXML
-    private Label startTimeLabel1;
 
     @FXML
     private TextArea descriptionTextArea;
@@ -98,7 +70,14 @@ public class AddAppointmentController {
 
     private Stage stage;
     private Parent scene;
+    private Integer appointmentId;
 
+    /**
+     * Retrieves the stage from the given path and event
+     * @param FXMLPath path of the FXML document to set up the next scene
+     * @param event that triggers the action
+     * @return the stage from the given path and event
+     */
     private Stage getStage(String FXMLPath, ActionEvent event){
         stage = (Stage)((Button)event.getSource()).getScene().getWindow();
         try {
@@ -111,6 +90,9 @@ public class AddAppointmentController {
         return stage;
     }
 
+    /**
+     * Calculates and sets the position of the current scene to show it on the desktop
+     */
     private void setWindowPosition(){
         double x = (Screen.getPrimary().getBounds().getWidth() - scene.getBoundsInParent().getWidth())/2;
         double y = (Screen.getPrimary().getBounds().getHeight() - scene.getBoundsInParent().getHeight())/2;
@@ -119,9 +101,13 @@ public class AddAppointmentController {
         stage.setResizable(false);
     }
 
+    /**
+     * Populates the given appointment data into the form, if the appointment isn't null
+     * @param appointment appointment which data is populated into the form
+     */
     public void populateAppointmentData(Appointment appointment){
         if (appointment != null) {
-            titleLabel.setText("Update Appointment");
+            appointmentId = appointment.getAppointmentId();
             datePicker.setValue(appointment.getStartTime().toLocalDate());
             startTimeComboBox.setValue(appointment.getStartTime().toLocalTime());
             endTimeComboBox.setValue(appointment.getEndTime().toLocalTime());;
@@ -134,9 +120,91 @@ public class AddAppointmentController {
         }
     }
 
+    /**
+     * Saves the information from the form into the DB and local cache. Validates that the fields are not not empty. Prompts
+     * an alert if some text fields are empty
+     * @return true if the appointment has been saved successfully, false otherwise
+     */
+    private boolean saveAppointment(){
+        LocalDate date = datePicker.getValue();
+        LocalTime startTime = startTimeComboBox.getValue();
+        LocalTime endTime = endTimeComboBox.getValue();
+        LocalDateTime startDateTime = LocalDateTime.of(date, startTime);
+        LocalDateTime endDateTime = LocalDateTime.of(date, endTime);
+        int customerId = customersComboBox.getSelectionModel().getSelectedItem().getCustomerId();
+        int userId = DBCache.getInstance().getUser().getUserId();
+        try {
+            Appointment app = new Appointment(appointmentId,
+                    titleTextField.getText(),
+                    descriptionTextArea.getText(),
+                    locationTextField.getText(),
+                    typeTextField.getText(),
+                    startDateTime,
+                    endDateTime,
+                    customerId,
+                    userId,
+                    contactComboBox.getSelectionModel().getSelectedItem().getContactId());
+            AppointmentDao appointmentDao = new AppointmentDao();
+            if (appointmentId == 0){
+                appointmentDao.add(app);
+            } else {
+                appointmentDao.update(app);
+            }
+            return true;
+        } catch (IllegalArgumentException ex){
+            var alert = new Alert(Alert.AlertType.INFORMATION, "Make sure no fields are empty");
+            alert.setTitle("Incomplete Form");
+            alert.setResizable(false);
+            alert.show();
+            return false;
+        }
+    }
 
+    /**
+     * Called to initialize a controller after its root element has been completely processed
+     * Sets up the limitations on the length of the text fields, contact, time, and customer combo boxes, as well as
+     * save/cancel buttons.
+     */
     @FXML
     public void initialize(){
+        titleTextField.lengthProperty().addListener(changeListener -> {
+            if (titleTextField.getText().length() > 20) {
+                titleTextField.setText(titleTextField.getText().substring(0, 20));
+            }
+        });
+
+        typeTextField.lengthProperty().addListener(changeListener -> {
+            if (typeTextField.getText().length() > 20) {
+                typeTextField.setText(typeTextField.getText().substring(0, 20));
+            }
+        });
+
+        locationTextField.lengthProperty().addListener(changeListener -> {
+            if (locationTextField.getText().length() > 20) {
+                locationTextField.setText(locationTextField.getText().substring(0, 20));
+            }
+        });
+
+        descriptionTextArea.lengthProperty().addListener(changeListener -> {
+            if (descriptionTextArea.getText().length() > 250) {
+                descriptionTextArea.setText(descriptionTextArea.getText().substring(0, 250));
+            }
+        });
+
+        setContactComboBox();
+        setTimeComboBoxes();
+        datePicker.setValue(LocalDate.now());
+        setCustomerComboBox();
+        setSaveButton();
+        setCancelButton();
+        setAllAppointmentsButton();
+        appointmentId = 0;
+    }
+
+    /**
+     * Sets up contact combo box with all the contacts from the DB/local cache
+     */
+    private void setContactComboBox() {
         ObservableList<Contact> contactsList = FXCollections.observableArrayList();
         Collection<Contact> contactsCollection = DBCache.getInstance().getContactHashMap().values();
         Iterator<Contact> iterator = contactsCollection.iterator();
@@ -145,7 +213,12 @@ public class AddAppointmentController {
         }
         contactComboBox.setItems(contactsList);
         contactComboBox.getSelectionModel().selectFirst();
+    }
 
+    /**
+     * Sets up time combo box with times from the the start of the business hours to the end of it.
+     */
+    private void setTimeComboBoxes() {
         ObservableList<LocalTime> startTimes = setUpTime(Appointment.getSTART_HOUR(), Appointment.getEND_HOUR());
         ObservableList<LocalTime> endTimes = setUpTime(Appointment.getSTART_HOUR().plusMinutes(15), Appointment.getEND_HOUR().plusMinutes(30));
         startTimeComboBox.setItems(startTimes);
@@ -164,38 +237,15 @@ public class AddAppointmentController {
                 startTimeComboBox.setValue(endTimeComboBox.getValue().minusMinutes(15));
             }
         });
-
-        datePicker.setValue(LocalDate.now());
-        ObservableList<Customer> customerList = FXCollections.observableArrayList();
-        Collection<Customer> customerCollection = DBCache.getInstance().getCustomerHashMap().values();
-        Iterator<Customer> customerIterator = customerCollection.iterator();
-        while (customerIterator.hasNext()){
-            customerList.add(customerIterator.next());
-        }
-        customersComboBox.setItems(customerList);
-        customersComboBox.getSelectionModel().selectFirst();
-
-        saveButton.setOnAction(event -> {
-            saveAppointment();
-            stage = getStage("../view/AppointmentsList.fxml", event);
-            stage.show();
-            setWindowPosition();
-        });
-
-        cancelButton.setOnAction(event -> {
-            stage = getStage("../view/MainMenu.fxml", event);
-            stage.show();
-            setWindowPosition();
-        });
-
-        allAppointmentsButton.setOnAction(event -> {
-            stage = getStage("../view/AppointmentsList.fxml", event);
-            stage.show();
-            setWindowPosition();
-        });
-
     }
 
+    /**
+     * Creates a list of all the times an appointment can be scheduled for, from opening to closing of the business
+     * hours incrementing by 15 mins.
+     * @param start start time of the business hours
+     * @param end end time of the business hours
+     * @return the list of all generated times
+     */
     private ObservableList<LocalTime> setUpTime(LocalTime start, LocalTime end){
         ObservableList<LocalTime> times = FXCollections.observableArrayList();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
@@ -206,31 +256,53 @@ public class AddAppointmentController {
         return times;
     }
 
-    private void saveAppointment(){
-        LocalDate date = datePicker.getValue();
-        LocalTime startTime = startTimeComboBox.getValue();
-        LocalTime endTime = endTimeComboBox.getValue();
-        LocalDateTime startDateTime = LocalDateTime.of(date, startTime);
-        LocalDateTime endDateTime = LocalDateTime.of(date, endTime);
-        int customerId = customersComboBox.getSelectionModel().getSelectedItem().getCustomerId();
-        int userId = DBCache.getInstance().getUser().getUserId();
-        Appointment app = new Appointment(0,
-                titleTextField.getText(),
-                descriptionTextArea.getText(),
-                locationTextField.getText(),
-                typeTextField.getText(),
-                startDateTime,
-                endDateTime,
-                customerId,
-                userId,
-                contactComboBox.getSelectionModel().getSelectedItem().getContactId());
-        AppointmentDao appointmentDao = new AppointmentDao();
-        if (DBCache.getAppById(app.getAppointmentId()) != null){
-            appointmentDao.update(app);
-        } else {
-            appointmentDao.add(app);
+    /**
+     * Set us customer combo box with all the customers from the DB/local cache
+     */
+    private void setCustomerComboBox() {
+        ObservableList<Customer> customerList = FXCollections.observableArrayList();
+        Collection<Customer> customerCollection = DBCache.getInstance().getCustomerHashMap().values();
+        Iterator<Customer> customerIterator = customerCollection.iterator();
+        while (customerIterator.hasNext()){
+            customerList.add(customerIterator.next());
         }
+        customersComboBox.setItems(customerList);
+        customersComboBox.getSelectionModel().selectFirst();
+    }
 
+    /**
+     * Sets up save button by calling save appointments and changing the scene to the appointment list
+     */
+    private void setSaveButton() {
+        saveButton.setOnAction(event -> {
+            if (saveAppointment()) {
+                stage = getStage("../view/AppointmentsList.fxml", event);
+                stage.show();
+                setWindowPosition();
+            }
+        });
+    }
+
+    /**
+     * Sets up cancel button by changing the scene to the main menu
+     */
+    private void setCancelButton() {
+        cancelButton.setOnAction(event -> {
+            stage = getStage("../view/MainMenu.fxml", event);
+            stage.show();
+            setWindowPosition();
+        });
+    }
+
+    /**
+     * Sets up all appointments button by changing the scene to the appointment list menu
+     */
+    private void setAllAppointmentsButton() {
+        allAppointmentsButton.setOnAction(event -> {
+            stage = getStage("../view/AppointmentsList.fxml", event);
+            stage.show();
+            setWindowPosition();
+        });
     }
 
 }

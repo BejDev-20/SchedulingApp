@@ -2,6 +2,7 @@ package DAO;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 import model.Customer;
 
 import java.sql.*;
@@ -16,11 +17,10 @@ public class CustomerDao implements DAO<Customer>{
 
     @Override
     public ObservableList<Customer> getAll() {
-        Connection conn = DBConnection.getConn();
         ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
         try{
             String sql = "SELECT Customer_ID, Customer_Name, Address, Postal_Code, Phone, Division_ID FROM customers";
-            PreparedStatement ps = conn.prepareStatement(sql);
+            PreparedStatement ps = DBConnection.getConn().prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
 
             while(rs.next()) {
@@ -41,11 +41,12 @@ public class CustomerDao implements DAO<Customer>{
 
     @Override
     public Customer getById(int id) {
-        Connection conn = DBConnection.getConn();
         Customer customer = null;
+        ;
         try{
             String sql = "SELECT Customer_ID, Customer_Name, Address, Postal_Code, Phone, Division_ID FROM customers" +
                          " WHERE Customer_ID = " + id;
+            Connection conn = DBConnection.getConn();
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
@@ -80,7 +81,7 @@ public class CustomerDao implements DAO<Customer>{
             psti.setString(6, getInstance().getUser().getName());
             psti.setTimestamp(7, Timestamp.valueOf(LocalDateTime.now()));
             psti.setString(8, getInstance().getUser().getName());
-            psti.setInt(9, item.getDivisionId());
+            psti.setInt(9, item.getDivision().getDivisionId());
             psti.execute();
             DBCache.getInstance().updateCustomers();
         } catch (SQLException e){
@@ -101,7 +102,7 @@ public class CustomerDao implements DAO<Customer>{
             psti.setString(4, item.getPhoneNumber());
             psti.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
             psti.setString(6, getInstance().getUser().getName());
-            psti.setInt(7, item.getDivisionId());
+            psti.setInt(7, item.getDivision().getDivisionId());
             psti.setInt(8, item.getCustomerId());
             psti.execute();
             DBCache.getInstance().updateCustomers();

@@ -12,6 +12,7 @@ import model.Country;
 import model.Customer;
 
 import java.sql.SQLException;
+import java.time.LocalTime;
 
 public class DAOMain extends Application {
 
@@ -33,9 +34,7 @@ public class DAOMain extends Application {
 
 
     public static void main(String[] args) throws SQLException {
-        DBConnection.startConnection();
         DBCache cache = DBCache.getInstance();
-        System.out.println(cache.getUser());
         launch(args);
         DBConnection.closeConnection();
     }

@@ -2,8 +2,6 @@ package DAO;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import model.Country;
-import model.Customer;
 import model.User;
 
 import java.sql.*;
@@ -15,11 +13,10 @@ public class UsersDao implements DAO<User> {
 
     @Override
     public ObservableList<User> getAll() {
-        Connection conn = DBConnection.getConn();
         ObservableList<User> allUsers = FXCollections.observableArrayList();
         try{
             String sql = "SELECT User_ID, User_Name, Password FROM users";
-            PreparedStatement ps = conn.prepareStatement(sql);
+            PreparedStatement ps = DBConnection.getConn().prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
 
             while(rs.next()) {
@@ -37,11 +34,10 @@ public class UsersDao implements DAO<User> {
 
     @Override
     public User getById(int id) {
-        Connection conn = DBConnection.getConn();
         User user = null;
         try{
             String sql = "SELECT User_ID, User_Name, Password FROM users WHERE User_ID = " + id;
-            PreparedStatement ps = conn.prepareStatement(sql);
+            PreparedStatement ps = DBConnection.getConn().prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
                 if(id == rs.getInt("User_ID")) {
