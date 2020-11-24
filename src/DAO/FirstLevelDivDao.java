@@ -2,16 +2,22 @@ package DAO;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import model.Country;
 import model.FirstLevelDiv;
-
 import java.sql.*;
 import java.time.LocalDateTime;
-
 import static DAO.DBCache.getInstance;
 
+/**
+ * Represents a DAO for firstLevelDivs table providing the functionality to get all firstLevelDivs from the table,
+ * add, update, or delete an appointment as well as retrieve one by the ID.
+ * @author Iulia Bejsovec
+ */
 public class FirstLevelDivDao implements DAO<FirstLevelDiv> {
 
+    /**
+     * Retrieves all the firstLevelDivs from the database and saves each into the local cache
+     * @return list of all the firstLevelDivs retrieved
+     */
     @Override
     public ObservableList<FirstLevelDiv> getAll() {
         ObservableList<FirstLevelDiv> allFirstLevelDiv = FXCollections.observableArrayList();
@@ -34,6 +40,11 @@ public class FirstLevelDivDao implements DAO<FirstLevelDiv> {
         return allFirstLevelDiv;
     }
 
+    /**
+     * Retrieves a firstLevelDiv by the ID
+     * @param id id of the firstLevelDiv to be retrieved
+     * @return firstLevelDiv with the id passed into the method
+     */
     @Override
     public FirstLevelDiv getById(int id) {
         FirstLevelDiv firstLevelDiv = null;
@@ -56,6 +67,11 @@ public class FirstLevelDivDao implements DAO<FirstLevelDiv> {
         return firstLevelDiv;
     }
 
+    /**
+     * Adds the given firstLevelDiv to the database as well as cache
+     * @param item firstLevelDiv to be added to the database and cache
+     * @return true if the firstLevelDiv is added
+     */
     @Override
     public boolean add(FirstLevelDiv item) {
         try {
@@ -75,6 +91,11 @@ public class FirstLevelDivDao implements DAO<FirstLevelDiv> {
         return true;
     }
 
+    /**
+     * Updates the given firstLevelDiv in the database as well as cache
+     * @param item firstLevelDiv to be updated in the database and cache
+     * @return true if the firstLevelDiv is updated
+     */
     @Override
     public boolean update(FirstLevelDiv item) {
         try {
@@ -93,6 +114,11 @@ public class FirstLevelDivDao implements DAO<FirstLevelDiv> {
         return true;
     }
 
+    /**
+     * Deletes the given firstLevelDiv from the database and cache
+     * @param item firstLevelDiv to be deleted
+     * @return true if the firstLevelDiv is deleted
+     */
     @Override
     public boolean delete(FirstLevelDiv item) {
         try {

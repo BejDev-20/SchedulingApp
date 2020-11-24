@@ -5,11 +5,19 @@ import javafx.collections.ObservableList;
 import model.Appointment;
 import java.sql.*;
 import java.time.LocalDateTime;
-
 import static DAO.DBCache.getInstance;
 
+/**
+ * Represents a DAO for appointment table providing the functionality to get all appointments from the table,
+ * add, update, or delete an appointment as well as retrieve one by the ID.
+ * @author Iulia Bejsovec
+ */
 public class AppointmentDao implements DAO<Appointment>{
 
+    /**
+     * Retrieves all the appointments from the database and saves each into the local cache
+     * @return list of all the appointments retrieved
+     */
     @Override
     public ObservableList<Appointment> getAll() {
         ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
@@ -40,6 +48,11 @@ public class AppointmentDao implements DAO<Appointment>{
         return allAppointments;
     }
 
+    /**
+     * Retrieves an appointment by the ID
+     * @param id id of the appointment to be retrieved
+     * @return appointment with the id passed into the method
+     */
     @Override
     public Appointment getById(int id) {
         Appointment appointment = null;
@@ -75,6 +88,11 @@ public class AppointmentDao implements DAO<Appointment>{
         return appointment;
     }
 
+    /**
+     * Adds the given appointment to the database as well as cache
+     * @param item appointment to be added to the database and cache
+     * @return true if the appointment is added
+     */
     @Override
     public boolean add(Appointment item) {
         try {
@@ -102,6 +120,11 @@ public class AppointmentDao implements DAO<Appointment>{
         return true;
     }
 
+    /**
+     * Updates the given appointment in the database as well as cache
+     * @param item appointment to be updated in the database and cache
+     * @return true if the appointment is updated
+     */
     @Override
     public boolean update(Appointment item) {
         try {
@@ -130,6 +153,11 @@ public class AppointmentDao implements DAO<Appointment>{
         return true;
     }
 
+    /**
+     * Deletes the given appointment from the database and cache
+     * @param item appointment to be deleted
+     * @return true if the appointment is deleted
+     */
     @Override
     public boolean delete(Appointment item) {
         try {

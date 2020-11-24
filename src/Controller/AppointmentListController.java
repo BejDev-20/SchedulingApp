@@ -123,6 +123,9 @@ public class AppointmentListController {
     /**
      * Fills the appointment table with data from all the appointments filtering by the contact and week/month/all radio
      * button selected.
+     * LAMBDA USE. Lambda expressions were used by defining an anonymous functions to set up the format of the data
+     * populating in the table. It is appropriate to use lambda expression as it produces readable and concise code.
+     * It would also be possible to take advantage of parallel execution, if needed
      */
     private void fillAppointmentTable() {
         ObservableList<Appointment> appointmentsList = filterAppointments();
@@ -208,6 +211,8 @@ public class AppointmentListController {
     /**
      * Sets up the contact combo box, filling it up with all contacts available from the DB, selects first and prompts
      * filtering of the appointment table
+     * LAMBDA USE. Lambda expressions were used by defining an anonymous functions to set up functionality when the
+     * combo box selected item changes. It is appropriate to use lambda expression as it produces readable and concise code.
      */
     private void setContactComboBox() {
         ObservableList<Contact> contactsList = FXCollections.observableArrayList();
@@ -223,6 +228,9 @@ public class AppointmentListController {
 
     /**
      * Sets up week/month/all radio buttons and prompts filtering
+     * LAMBDA USE. Lambda expressions were used by defining an anonymous functions to set up functionality for all
+     * radio buttons. It is appropriate to use lambda expression as it produces readable and concise code.
+     * It would also be possible to take advantage of parallel execution, if needed
      */
     private void setRadioButtons() {
         weekRadioButton.setOnAction(event -> { fillAppointmentTable(); });
@@ -232,6 +240,8 @@ public class AppointmentListController {
 
     /**
      * Sets up functionality for the add new appointment button by switching the scene to the add appointment
+     * LAMBDA USE. Lambda expression was used by defining an anonymous functions to set up functionality for add new
+     * appointment button. It is appropriate to use lambda expression as it produces readable and concise code.
      */
     private void setAddNewAppointmentButton() {
         addNewAppointmentButton.setOnAction(event -> {
@@ -243,6 +253,8 @@ public class AppointmentListController {
 
     /**
      * Sets up delete button and prompts confirmation alert for deleting the appointment
+     * LAMBDA USE. Lambda expression was used by defining an anonymous functions to set up functionality for delete
+     * appointment button. It is appropriate to use lambda expression as it produces readable and concise code.
      */
     private void setDeleteAppointmentButton() {
         deleteAppointmentButton.setOnAction(event -> {
@@ -268,6 +280,8 @@ public class AppointmentListController {
 
     /**
      * Sets up back button to switch the scene to the Main menu
+     * LAMBDA USE. Lambda expression was used by defining an anonymous functions to set up change of scenes.
+     * It is appropriate to use lambda expression as it produces readable and concise code.
      */
     private void setBackButton() {
         backButton.setOnAction(event -> {

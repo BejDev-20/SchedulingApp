@@ -52,10 +52,10 @@ public class Appointment {
      */
     public Appointment(int appointmentId, String title, String description, String location, String type,
                        LocalDateTime startTime, LocalDateTime endTime, int customerId, int userId, int contactId) {
-        title = title.trim();
-        description = description.trim();
-        location = location.trim();
-        type = type.trim();
+        if (title != null) title = title.trim();
+        if (description != null) description = description.trim();
+        if (location != null) location = location.trim();
+        if (type != null) type = type.trim();
 
         checkForNull(title);
         checkForNull(description);

@@ -3,14 +3,21 @@ package DAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.User;
-
 import java.sql.*;
 import java.time.LocalDateTime;
-
 import static DAO.DBCache.getInstance;
 
+/**
+ * Represents a DAO for users table providing the functionality to get all users from the table,
+ * add, update, or delete an user as well as retrieve one by the ID.
+ * @author Iulia Bejsovec
+ */
 public class UsersDao implements DAO<User> {
 
+    /**
+     * Retrieves all the users from the database and saves each into the local cache
+     * @return list of all the users retrieved
+     */
     @Override
     public ObservableList<User> getAll() {
         ObservableList<User> allUsers = FXCollections.observableArrayList();
@@ -32,6 +39,11 @@ public class UsersDao implements DAO<User> {
         return allUsers;
     }
 
+    /**
+     * Retrieves an user by the ID
+     * @param id id of the user to be retrieved
+     * @return user with the id passed into the method
+     */
     @Override
     public User getById(int id) {
         User user = null;
@@ -54,6 +66,11 @@ public class UsersDao implements DAO<User> {
         return user;
     }
 
+    /**
+     * Adds the given user to the database as well as cache
+     * @param item user to be added to the database and cache
+     * @return true if the user is added
+     */
     @Override
     public boolean add(User item) {
         try {
@@ -73,6 +90,11 @@ public class UsersDao implements DAO<User> {
         return true;
     }
 
+    /**
+     * Updates the given user in the database as well as cache
+     * @param item user to be updated in the database and cache
+     * @return true if the user is updated
+     */
     @Override
     public boolean update(User item) {
         try {
@@ -91,6 +113,11 @@ public class UsersDao implements DAO<User> {
         return true;
     }
 
+    /**
+     * Deletes the given user from the database and cache
+     * @param item user to be deleted
+     * @return true if the user is deleted
+     */
     @Override
     public boolean delete(User item) {
         try {

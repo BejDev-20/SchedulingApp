@@ -20,6 +20,9 @@ public class User {
      * @param password user's password
      */
     public User(int userId, String name, String password) {
+        if (name != null) name = name.trim();
+        if (password != null) password = password.trim();
+
         checkForNull(name);
         checkForNull(password);
 

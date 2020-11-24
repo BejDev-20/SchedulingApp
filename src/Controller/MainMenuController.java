@@ -1,15 +1,25 @@
 package Controller;
 
+import DAO.DBCache;
+import DAO.DBConnection;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-
+import model.Appointment;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Collection;
+import java.util.Iterator;
+
+import static java.time.temporal.ChronoUnit.MINUTES;
 
 public class MainMenuController {
     @FXML
@@ -23,6 +33,9 @@ public class MainMenuController {
 
     @FXML
     private Button addAppointmentButton;
+
+    @FXML
+    private Label upcomingAppointmentLabel;
 
     private Stage stage;
     private Parent scene;
@@ -59,9 +72,33 @@ public class MainMenuController {
     /**
      * Called to initialize the controller after its root element has been completely processed
      * Sets up customers, appointments, add customer, and add appointment buttons
+     * LAMBDA USE. Lambda expressions were used by defining an anonymous functions to set up functionality for all
+     * buttons. It is appropriate to use lambda expression as it produces readable and concise code.
+     * It would also be possible to take advantage of parallel execution, if needed
      */
     @FXML
     public void initialize(){
+
+        Collection<Appointment> allAppointments = DBCache.getAppointmentHashMap().values();
+        Iterator iterator = allAppointments.iterator();
+        while (iterator.hasNext()){
+            Appointment appointment = (Appointment) iterator.next();
+            LocalDate currentDate = LocalDate.now();
+            LocalTime currentTime = LocalTime.now();
+            LocalTime appTime = appointment.getStartTime().toLocalTime();
+            if (appointment.getUser().equals(DBCache.getInstance().getUser()) &&
+                    appointment.getStartTime().toLocalDate().equals(currentDate) &&
+                    appTime.isAfter(currentTime) &&
+                    MINUTES.between(appTime, currentTime) <= 15
+                ) {
+                upcomingAppointmentLabel.setText("You have an upcoming appointment: \n" + appointment.getAppointmentId() +
+                                                 "\t" + appointment.getStartTime().getMonth() + "-" + appointment.getStartTime().getDayOfMonth() +
+                                                 "-" + appointment.getStartTime().getYear() + "\tat\t" +
+                       DateTimeFormatter.ofPattern("HH:mm").format(appTime).toString());
+            }
+        }
+
+
         addCustomerButton.setOnAction(event -> {
             stage = getStage("../view/AddCustomer.fxml", event);
             stage.show();

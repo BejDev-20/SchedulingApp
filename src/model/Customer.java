@@ -33,10 +33,10 @@ public class Customer {
      */
     public Customer(Integer customerId, String name, String address, String postalCode, String phoneNumber,
                     Integer divisionId) {
-        name = name.trim();
-        address = address.trim();
-        postalCode = postalCode.trim();
-        phoneNumber = phoneNumber.trim();
+        if (name != null) name = name.trim();
+        if (address != null) address = address.trim();
+        if (postalCode != null) postalCode = postalCode.trim();
+        if (phoneNumber != null) phoneNumber = phoneNumber.trim();
 
         checkForNull(name);
         checkForNull(address);

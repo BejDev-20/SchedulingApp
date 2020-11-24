@@ -2,19 +2,22 @@ package DAO;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Alert;
 import model.Customer;
-
 import java.sql.*;
 import java.time.LocalDateTime;
-
 import static DAO.DBCache.getInstance;
 
 /**
- *
+ * Represents a DAO for customers table providing the functionality to get all customers from the table,
+ * add, update, or delete a customer as well as retrieve one by the ID.
+ * @author Iulia Bejsovec
  */
 public class CustomerDao implements DAO<Customer>{
 
+    /**
+     * Retrieves all the customers from the database and saves each into the local cache
+     * @return list of all the customers retrieved
+     */
     @Override
     public ObservableList<Customer> getAll() {
         ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
@@ -39,6 +42,11 @@ public class CustomerDao implements DAO<Customer>{
         return allCustomers;
     }
 
+    /**
+     * Retrieves a customer by the ID
+     * @param id id of the customer to be retrieved
+     * @return customer with the id passed into the method
+     */
     @Override
     public Customer getById(int id) {
         Customer customer = null;
@@ -68,6 +76,11 @@ public class CustomerDao implements DAO<Customer>{
         return customer;
     }
 
+    /**
+     * Adds the given customer to the database as well as cache
+     * @param item customer to be added to the database and cache
+     * @return true if the customer is added
+     */
     @Override
     public boolean add(Customer item) {
         try {
@@ -90,6 +103,11 @@ public class CustomerDao implements DAO<Customer>{
         return true;
     }
 
+    /**
+     * Updates the given customer in the database as well as cache
+     * @param item customer to be updated in the database and cache
+     * @return true if the customer is updated
+     */
     @Override
     public boolean update(Customer item) {
         try {
@@ -112,6 +130,11 @@ public class CustomerDao implements DAO<Customer>{
         return true;
     }
 
+    /**
+     * Deletes the given customer from the database and cache
+     * @param item customer to be deleted
+     * @return true if the customer is deleted
+     */
     @Override
     public boolean delete(Customer item) {
         try {

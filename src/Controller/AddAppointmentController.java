@@ -16,10 +16,7 @@ import model.Appointment;
 import model.Contact;
 import model.Customer;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
+import java.time.*;
 import java.util.*;
 
 /**
@@ -126,14 +123,18 @@ public class AddAppointmentController {
      * @return true if the appointment has been saved successfully, false otherwise
      */
     private boolean saveAppointment(){
-        LocalDate date = datePicker.getValue();
-        LocalTime startTime = startTimeComboBox.getValue();
-        LocalTime endTime = endTimeComboBox.getValue();
-        LocalDateTime startDateTime = LocalDateTime.of(date, startTime);
-        LocalDateTime endDateTime = LocalDateTime.of(date, endTime);
-        int customerId = customersComboBox.getSelectionModel().getSelectedItem().getCustomerId();
-        int userId = DBCache.getInstance().getUser().getUserId();
         try {
+            LocalDate date = datePicker.getValue();
+            LocalTime startTime = startTimeComboBox.getValue();
+            LocalTime endTime = endTimeComboBox.getValue();
+            LocalDateTime startDateTime = LocalDateTime.of(date, startTime);
+            LocalDateTime endDateTime = LocalDateTime.of(date, endTime);
+            int customerId = customersComboBox.getSelectionModel().getSelectedItem().getCustomerId();
+            int userId = DBCache.getInstance().getUser().getUserId();
+            boolean overlaps = checkOverlap(startDateTime, endDateTime, customersComboBox.getSelectionModel().getSelectedItem());
+            if (overlaps){
+                throw new NullPointerException();
+            }
             Appointment app = new Appointment(appointmentId,
                     titleTextField.getText(),
                     descriptionTextArea.getText(),
@@ -156,14 +157,49 @@ public class AddAppointmentController {
             alert.setTitle("Incomplete Form");
             alert.setResizable(false);
             alert.show();
-            return false;
+        } catch (NullPointerException ex){
+            var alert = new Alert(Alert.AlertType.INFORMATION, "Looks like the new appointment overlaps an existing one ");
+            alert.setTitle("Overlap appointment");
+            alert.setResizable(false);
+            alert.show();
         }
+        return false;
     }
+
+    private boolean checkOverlap(LocalDateTime startDateTime, LocalDateTime endDateTime, Customer customer) {
+        Collection<Appointment> allAppointments = DBCache.getAppointmentHashMap().values();
+        Iterator<Appointment> iterator = allAppointments.iterator();
+        LocalTime[][] appArray = new LocalTime[56][2];
+        int index = 0;
+        while(iterator.hasNext()){
+            Appointment appointment = iterator.next();
+            if (appointment.getCustomer().equals(customer) && appointment.getStartTime().toLocalDate().equals(startDateTime.toLocalDate())){
+                appArray[index][0] = appointment.getStartTime().toLocalTime();
+                appArray[index][1] = appointment.getEndTime().toLocalTime();
+                index++;
+            }
+        }
+        LocalTime startTime = startDateTime.toLocalTime();
+        LocalTime endTime = endDateTime.toLocalTime();
+        for (int idx = 0; idx < index; idx++){
+            LocalTime tempStart = appArray[idx][0];
+            LocalTime tempEnd = appArray[idx][1];
+            if (startTime.equals(tempStart) || (startTime.isAfter(tempStart) && startTime.isBefore(tempEnd))
+                    || endTime.equals(tempEnd) || (endTime.isBefore(tempEnd) && endTime.isAfter(tempStart))){
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     /**
      * Called to initialize a controller after its root element has been completely processed
      * Sets up the limitations on the length of the text fields, contact, time, and customer combo boxes, as well as
      * save/cancel buttons.
+     * LAMBDA USE. Lambda expressions were used by defining an anonymous functions to set up functionality for each of
+     * the text field's limitations. It is appropriate to use lambda expression as it produces readable and concise code.
+     * It would also be possible to take advantage of parallel execution, if needed
      */
     @FXML
     public void initialize(){
@@ -217,10 +253,13 @@ public class AddAppointmentController {
 
     /**
      * Sets up time combo box with times from the the start of the business hours to the end of it.
+     * LAMBDA USE. Lambda expressions were used by defining an anonymous functions to set up values for each time
+     * combo box. It is appropriate to use lambda expression as it produces readable and concise code.
      */
     private void setTimeComboBoxes() {
         ObservableList<LocalTime> startTimes = setUpTime(Appointment.getSTART_HOUR(), Appointment.getEND_HOUR());
         ObservableList<LocalTime> endTimes = setUpTime(Appointment.getSTART_HOUR().plusMinutes(15), Appointment.getEND_HOUR().plusMinutes(30));
+
         startTimeComboBox.setItems(startTimes);
         endTimeComboBox.setItems(endTimes);
         startTimeComboBox.getSelectionModel().selectFirst();
@@ -239,6 +278,7 @@ public class AddAppointmentController {
         });
     }
 
+
     /**
      * Creates a list of all the times an appointment can be scheduled for, from opening to closing of the business
      * hours incrementing by 15 mins.
@@ -248,9 +288,15 @@ public class AddAppointmentController {
      */
     private ObservableList<LocalTime> setUpTime(LocalTime start, LocalTime end){
         ObservableList<LocalTime> times = FXCollections.observableArrayList();
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
         while (start.isBefore(end.minusMinutes(29))){
-            times.add(start);
+            LocalDate date = LocalDate.now();
+            ZoneId estZoneId = ZoneId.of("America/Thunder_Bay");
+            ZonedDateTime estZDT = ZonedDateTime.of(date, start, estZoneId);
+            ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
+            Instant estToGMTInstant = estZDT.toInstant();
+            ZonedDateTime estToLocal = estZDT.withZoneSameInstant(localZoneId);
+            LocalTime time = LocalTime.of(estToLocal.getHour(), estToLocal.getMinute());
+            times.add(time);
             start = start.plusMinutes(15);
         }
         return times;
@@ -272,6 +318,8 @@ public class AddAppointmentController {
 
     /**
      * Sets up save button by calling save appointments and changing the scene to the appointment list
+     * LAMBDA USE. Lambda expression was used by defining an anonymous functions to set up change of scenes.
+     * It is appropriate to use lambda expression as it produces readable and concise code.
      */
     private void setSaveButton() {
         saveButton.setOnAction(event -> {
@@ -285,6 +333,8 @@ public class AddAppointmentController {
 
     /**
      * Sets up cancel button by changing the scene to the main menu
+     * LAMBDA USE. Lambda expression was used by defining an anonymous functions to set up change of scenes.
+     * It is appropriate to use lambda expression as it produces readable and concise code.
      */
     private void setCancelButton() {
         cancelButton.setOnAction(event -> {
@@ -296,6 +346,9 @@ public class AddAppointmentController {
 
     /**
      * Sets up all appointments button by changing the scene to the appointment list menu
+     * LAMBDA USE. Lambda expression was used by defining an anonymous functions to set up change of scenes.
+     * It is appropriate to use lambda expression as it produces readable and concise code.
+     *
      */
     private void setAllAppointmentsButton() {
         allAppointmentsButton.setOnAction(event -> {
@@ -304,5 +357,4 @@ public class AddAppointmentController {
             setWindowPosition();
         });
     }
-
 }

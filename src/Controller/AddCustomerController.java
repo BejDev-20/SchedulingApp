@@ -143,6 +143,9 @@ public class AddCustomerController {
      * Called to initialize a controller after its root element has been completely processed
      * Sets up the limitations on the length of the text fields, coutnry and division combo boxe, as well as
      * save/cancel buttons.
+     * LAMBDA USE. Lambda expressions were used by defining an anonymous functions to set up limitations for each of
+     * the text field's. It is appropriate to use lambda expression as it produces readable and concise code.
+     * It would also be possible to take advantage of parallel execution, if needed
      */
     @FXML
     public void initialize() {
@@ -182,6 +185,9 @@ public class AddCustomerController {
     /**
      * Sets up country combo box with all the countries from the DB/local cache and functionality to filter the division
      * combo box
+     * LAMBDA USE. Lambda expression was used by defining an anonymous functions to set up functionality for the combo
+     * box and setting up the selected item. It is appropriate to use lambda expression as it produces readable and
+     * concise code.
      */
     private void setCountryComboBox() {
         ObservableList<Country> countryList = FXCollections.observableArrayList();
@@ -216,6 +222,8 @@ public class AddCustomerController {
 
     /**
      * Sets up save button by calling save customers and changing the scene to the customers list
+     * LAMBDA USE. Lambda expression was used by defining an anonymous functions to set up change of scenes.
+     * It is appropriate to use lambda expression as it produces readable and concise code.
      */
     private void setSaveButton() {
         saveButton.setOnAction(event -> {
@@ -229,6 +237,8 @@ public class AddCustomerController {
 
     /**
      * Sets up cancel button by changing the scene to the main menu
+     * LAMBDA USE. Lambda expression was used by defining an anonymous functions to set up change of scenes.
+     * It is appropriate to use lambda expression as it produces readable and concise code.
      */
     private void setCancelButton() {
         cancelButton.setOnAction(event -> {
@@ -240,6 +250,8 @@ public class AddCustomerController {
 
     /**
      * Sets up all customers button by changing the scene to the customer list menu
+     * LAMBDA USE. Lambda expression was used by defining an anonymous functions to set up change of scenes.
+     * It is appropriate to use lambda expression as it produces readable and concise code.
      */
     private void setAllCustomersButton() {
         allCustomersButton.setOnAction(event -> {

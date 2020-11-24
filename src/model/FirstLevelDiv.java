@@ -22,6 +22,7 @@ public class FirstLevelDiv {
      * @param countryId division's country
      */
     public FirstLevelDiv(int divisionId, String name, int countryId) {
+        if (name != null) name = name.trim();
         checkForNull(name);
         this.divisionId = divisionId;
         this.name = name;

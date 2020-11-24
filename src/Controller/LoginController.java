@@ -5,14 +5,17 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.User;
+
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.time.*;
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Responsible for the control of the login form. Provides necessary text field for username and password.
@@ -21,7 +24,7 @@ import java.util.HashMap;
  */
 public class LoginController {
     @FXML
-    private ChoiceBox<?> languageDropDown;
+    private ChoiceBox<Locale.LanguageRange> languageDropDown;
 
     @FXML
     private TextField usernameTextField;
@@ -35,8 +38,13 @@ public class LoginController {
     @FXML
     private Button exitButton;
 
+    @FXML
+    private Label localeLabel;
+
+
     private Stage stage;
     private Parent scene;
+    File logFile;
 
     /**
      * Retrieves the stage from the given path and event
@@ -59,17 +67,25 @@ public class LoginController {
     /**
      * Called to initialize a controller after its root element has been completely processed
      * Sets up login and exit buttons, pops alert if username or password isn't correct
+     * LAMBDA USE. Lambda expressions were used by defining an anonymous functions to set up functionality for login
+     * and exit buttons. It is appropriate to use lambda expression as it produces readable and concise code.
      */
     @FXML
     public void initialize() {
+        logFile = new File("login_activity.txt");
+        localeLabel.setText(ZoneId.systemDefault().toString());
         loginButton.setOnAction(event -> {
-            String username = usernameTextField.getText();
-            String password = passwordTextField.getText();
-            User user = new User(0, username, password);
-            if (searchForUser(user) != null) {
-                stage = getStage("../view/MainMenu.fxml", event);
-                stage.show();
-            } else {
+            try {
+                String username = usernameTextField.getText();
+                String password = passwordTextField.getText();
+                User user = new User(0, username, password);
+                if (searchForUser(user) != null) {
+                    stage = getStage("../view/MainMenu.fxml", event);
+                    stage.show();
+                } else {
+                    throw new IllegalArgumentException();
+                }
+            } catch (IllegalArgumentException ex) {
                 var alert = new Alert(Alert.AlertType.ERROR, "Incorrect user name or password");
                 alert.setTitle("Login Error");
                 alert.setResizable(false);
@@ -80,7 +96,6 @@ public class LoginController {
         exitButton.setOnAction(event -> {
             System.exit(0);
         });
-        //passwordTextField
     }
 
     /**
@@ -92,13 +107,31 @@ public class LoginController {
     private User searchForUser(User user) {
         DBCache dbCache = DBCache.getInstance();
         HashMap<Integer, User> users = dbCache.getUserHashMap();
+        User userToReturn = null;
         for(User oneUser : users.values()){
             if(oneUser.equals(user)){
                 DBCache.getInstance().setUser(oneUser);
-                return oneUser;
+                userToReturn = oneUser;
             }
         }
-        return null;
+        try {
+            LocalDateTime dateTime = LocalDateTime.now();
+            ZoneId localZoneId = ZoneId.of(TimeZone.getDefault().getID());
+            ZonedDateTime localZDT = ZonedDateTime.of(dateTime.toLocalDate(), dateTime.toLocalTime(), localZoneId);
+            ZoneId utcZoneId = ZoneId.of("UTC");
+            Instant localToGMTInstant = localZDT.toInstant();
+            ZonedDateTime localToUtc = localZDT.withZoneSameInstant(utcZoneId);
+
+            FileWriter myWriter = new FileWriter(logFile, true);
+            myWriter.append(localToUtc.toLocalDate() + "\t" + localToUtc.toLocalTime() + "\t\t" + user.getName() + "\t");
+            if (userToReturn != null){
+                myWriter.append("Successful login\n");
+            } else {
+                myWriter.append("Failed login\n");
+            }
+            myWriter.close();
+        } catch (IOException ex){}
+        return userToReturn;
     }
 
 

@@ -5,7 +5,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
- * Make static so there will only be one connection?! SINGLETON
+ * Responsible for the connection to the database and helps maintaining connection when needed
+ * @quthor Iulia Bejsovec
  */
 public class DBConnection extends Thread {
     // JDBC URL parts
@@ -16,10 +17,14 @@ public class DBConnection extends Thread {
     private static final String JDBC_URL = PROTOCOL + VENDOR_NAME + IP_ADDRESS + "?autoReconnect=true";
     private static final String MYSQL_JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     private static Connection conn = null;
-
+    // username and password for connection to the database
     private static final String USERNAME = "U07OFg";
     private static final String PASSWORD = "53689083159";
 
+    /**
+     * Starts the connection if it is null or returns the existing one
+     * @return the newly created connection or the existing one
+     */
     public static Connection startConnection(){
         try {
             Class.forName(MYSQL_JDBC_DRIVER);
@@ -32,6 +37,9 @@ public class DBConnection extends Thread {
         return conn;
     }
 
+    /**
+     * Close the existing connection
+     */
     public static void closeConnection(){
         try {
             conn.close();
@@ -40,6 +48,11 @@ public class DBConnection extends Thread {
         }
     }
 
+    /**
+     * Retrieves the connection, creates one if one doesn't exist
+     * @return connection - newly created one or one that exists
+     * @throws SQLException when the connection cannot be established
+     */
     public static Connection getConn() throws SQLException {
         try {
             if (conn == null || conn.isClosed()){

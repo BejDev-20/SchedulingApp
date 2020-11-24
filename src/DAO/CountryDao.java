@@ -5,11 +5,19 @@ import javafx.collections.ObservableList;
 import model.Country;
 import java.sql.*;
 import java.time.LocalDateTime;
-
 import static DAO.DBCache.getInstance;
 
+/**
+ * Represents a DAO for country table providing the functionality to get all countries from the table,
+ * add, update, or delete a country as well as retrieve one by the ID.
+ * @author Iulia Bejsovec
+ */
 public class CountryDao implements DAO<Country> {
 
+    /**
+     * Retrieves all the countries from the database and saves each into the local cache
+     * @return list of all the countries retrieved
+     */
     @Override
     public ObservableList<Country> getAll() {
         ObservableList<Country> allCountries = FXCollections.observableArrayList();
@@ -30,6 +38,11 @@ public class CountryDao implements DAO<Country> {
         return allCountries;
     }
 
+    /**
+     * Retrieves a country by the ID
+     * @param id id of the country to be retrieved
+     * @return country with the id passed into the method
+     */
     @Override
     public Country getById(int id) {
         Country country = null;
@@ -51,6 +64,11 @@ public class CountryDao implements DAO<Country> {
         return country;
     }
 
+    /**
+     * Adds the given country to the database as well as cache
+     * @param item country to be added to the database and cache
+     * @return true if the country is added
+     */
     @Override
     public boolean add(Country item) {
         try {
@@ -69,6 +87,11 @@ public class CountryDao implements DAO<Country> {
         return true;
     }
 
+    /**
+     * Updates the given country in the database as well as cache
+     * @param item country to be updated in the database and cache
+     * @return true if the country is updated
+     */
     @Override
     public boolean update(Country item) {
         try {
@@ -86,6 +109,11 @@ public class CountryDao implements DAO<Country> {
         return true;
     }
 
+    /**
+     * Deletes the given country from the database and cache
+     * @param item country to be deleted
+     * @return true if the country is deleted
+     */
     @Override
     public boolean delete(Country item) {
         try {

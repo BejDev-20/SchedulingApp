@@ -3,10 +3,19 @@ package DAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.Contact;
-
 import java.sql.*;
 
+/**
+ * Represents a DAO for contacts table providing the functionality to get all contacts from the table,
+ * add, update, or delete a contact as well as retrieve one by the ID.
+ * @author Iulia Bejsovec
+ */
 public class ContactDao implements DAO<Contact> {
+
+    /**
+     * Retrieves all the contacts from the database and saves each into the local cache
+     * @return list of all the contacts retrieved
+     */
     @Override
     public ObservableList<Contact> getAll() {
         ObservableList<Contact> allContacts = FXCollections.observableArrayList();
@@ -27,6 +36,11 @@ public class ContactDao implements DAO<Contact> {
         return allContacts;
     }
 
+    /**
+     * Retrieves an contact by the ID
+     * @param id id of the contact to be retrieved
+     * @return contact with the id passed into the method
+     */
     @Override
     public Contact getById(int id) {
         Contact contact = null;
@@ -49,6 +63,11 @@ public class ContactDao implements DAO<Contact> {
         return contact;
     }
 
+    /**
+     * Adds the given contact to the database as well as cache
+     * @param item contact to be added to the database and cache
+     * @return true if the contact is added
+     */
     @Override
     public boolean add(Contact item) {
         try {
@@ -64,6 +83,11 @@ public class ContactDao implements DAO<Contact> {
         return true;
     }
 
+    /**
+     * Updates the given contact in the database as well as cache
+     * @param item contact to be updated in the database and cache
+     * @return true if the contact is updated
+     */
     @Override
     public boolean update(Contact item) {
         try {
@@ -79,6 +103,11 @@ public class ContactDao implements DAO<Contact> {
         return true;
     }
 
+    /**
+     * Deletes the given contact from the database and cache
+     * @param item contact to be deleted
+     * @return true if the contact is deleted
+     */
     @Override
     public boolean delete(Contact item) {
         try {

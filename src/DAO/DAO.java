@@ -3,7 +3,8 @@ package DAO;
 import javafx.collections.ObservableList;
 
 /**
- *
+ * Represents an interface for the DAO pattern, provides getAll, add, update, and delete skeleton for the classes.
+ * @author Iulia Bejsovec
  */
 public interface DAO<T> {
 

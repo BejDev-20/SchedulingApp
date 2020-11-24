@@ -121,6 +121,8 @@ public class CustomerListController {
 
     /**
      * Sets up functionality for the add new customer button by switching the scene to the add customer
+     * LAMBDA USE. Lambda expressions were used by defining an anonymous functions to set up functionality the change
+     * of scenes. It is appropriate to use lambda expression as it produces readable and concise code.
      */
     private void setAddNewCustomerButton(){
         addNewCustomerButton.setOnAction(event -> {
@@ -158,6 +160,8 @@ public class CustomerListController {
     /**
      * Sets up delete button and prompts confirmation alert as well as informational one in case the customer cannot
      * be deleted due to appointments associated with that customer
+     * LAMBDA USE. Lambda expression was used by defining an anonymous functions to set up functionality for delete
+     * button. It is appropriate to use lambda expression as it produces readable and concise code.
      */
     private void setDeleteCustomerButton() {
         deleteCustomerButton.setOnAction(event -> {
@@ -208,6 +212,8 @@ public class CustomerListController {
 
     /**
      * Sets up back button to switch the scene to the Main menu
+     * LAMBDA USE. Lambda expressions were used by defining an anonymous functions to set up change of scenes. It is
+     * appropriate to use lambda expression as it produces readable and concise code.
      */
     private void setBackButton(){
         backButton.setOnAction(event -> {
