@@ -37,6 +37,9 @@ public class MainMenuController {
     @FXML
     private Label upcomingAppointmentLabel;
 
+    @FXML
+    private Button byTypeAndMonthButton;
+
     private Stage stage;
     private Parent scene;
 
@@ -119,6 +122,12 @@ public class MainMenuController {
 
         addAppointmentButton.setOnAction(event -> {
             stage = getStage("../view/AddAppointment.fxml", event);
+            stage.show();
+            setWindowPosition();
+        });
+
+        byTypeAndMonthButton.setOnAction(event -> {
+            stage = getStage("../view/AppointmentsTypeMonth.fxml", event);
             stage.show();
             setWindowPosition();
         });

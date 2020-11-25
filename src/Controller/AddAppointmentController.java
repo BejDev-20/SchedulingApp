@@ -185,7 +185,9 @@ public class AddAppointmentController {
             LocalTime tempStart = appArray[idx][0];
             LocalTime tempEnd = appArray[idx][1];
             if (startTime.equals(tempStart) || (startTime.isAfter(tempStart) && startTime.isBefore(tempEnd))
-                    || endTime.equals(tempEnd) || (endTime.isBefore(tempEnd) && endTime.isAfter(tempStart))){
+                    || endTime.equals(tempEnd) || (endTime.isBefore(tempEnd) && endTime.isAfter(tempStart)) ||
+                    tempStart.equals(startTime) || (tempStart.isAfter(startTime) && tempStart.isBefore(endTime))
+                    || tempEnd.equals(endTime) || (tempEnd.isBefore(endTime) && tempEnd.isAfter(startTime))){
                 return true;
             }
         }
