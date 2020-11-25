@@ -1,4 +1,4 @@
-package Controller;
+package Controller.Reports;
 
 import DAO.DBConnection;
 import javafx.collections.FXCollections;
@@ -19,22 +19,26 @@ import java.io.IOException;
 import java.sql.*;
 import java.time.Month;
 
+/**
+ *
+ * @author Iulia Bejsovec
+ */
 public class AppointmentsTypeMonth {
 
     @FXML
     private Button backButton;
 
     @FXML
-    private TableView<TableData> typeAndMonthTableView;
+    private TableView<TypeAndMonth> typeAndMonthTableView;
 
     @FXML
-    private TableColumn<TableData, Integer> numberOfAppointmentsColumn;
+    private TableColumn<TypeAndMonth, Integer> numberOfAppointmentsColumn;
 
     @FXML
-    private TableColumn<TableData, Month> monthColumn;
+    private TableColumn<TypeAndMonth, Month> monthColumn;
 
     @FXML
-    private TableColumn<TableData, String> typeColumn;
+    private TableColumn<TypeAndMonth, String> typeColumn;
 
     private Stage stage;
     private Parent scene;
@@ -78,7 +82,7 @@ public class AppointmentsTypeMonth {
      * */
     @FXML
     public void initialize() throws SQLException {
-        ObservableList<TableData> allData = FXCollections.observableArrayList();
+        ObservableList<TypeAndMonth> allData = FXCollections.observableArrayList();
         try{
             String sql = "SELECT count(Appointment_ID) as Count,  MONTH(Start) as Month, Type FROM WJ07OFg.appointments " +
                          "GROUP BY Month, Type;";
@@ -88,7 +92,7 @@ public class AppointmentsTypeMonth {
                 int count = rs.getInt("Count");
                 int month = rs.getInt("Month");
                 String type = rs.getString("Type");
-                TableData oneRow = new TableData(count, Month.of(month), type);
+                TypeAndMonth oneRow = new TypeAndMonth(count, Month.of(month), type);
                 allData.add(oneRow);
             }
         } catch (SQLException e) {
@@ -101,7 +105,7 @@ public class AppointmentsTypeMonth {
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));;
 
         backButton. setOnAction(event -> {
-            stage = getStage("../view/MainMenu.fxml", event);
+            stage = getStage("/view/MainMenu.fxml", event);
             stage.show();
             setWindowPosition();
         });

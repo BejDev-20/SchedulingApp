@@ -40,6 +40,9 @@ public class MainMenuController {
     @FXML
     private Button byTypeAndMonthButton;
 
+    @FXML
+    private Button divisionCountryButton;
+
     private Stage stage;
     private Parent scene;
 
@@ -132,5 +135,10 @@ public class MainMenuController {
             setWindowPosition();
         });
 
+        divisionCountryButton.setOnAction(event -> {
+            stage = getStage("../view/CustomersDivisionCountry.fxml", event);
+            stage.show();
+            setWindowPosition();
+        });
     }
 }
