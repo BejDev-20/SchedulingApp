@@ -12,7 +12,7 @@ public class DAOMain extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("view/LoginScreen.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/view/LoginScreen.fxml"));
         primaryStage.setTitle("Sasquatch Consulting");
         primaryStage.setScene(new Scene(root));
         double x = (Screen.getPrimary().getBounds().getWidth() - root.getBoundsInParent().getWidth())/2;

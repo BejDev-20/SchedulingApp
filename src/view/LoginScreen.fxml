@@ -18,7 +18,7 @@
             <Image url="file:Images/390a693a-67ab-4387-b0f1-cb31c356d0a5_200x200.png" />
          </image>
       </ImageView>
-      <ChoiceBox fx:id="languageDropDown" layoutX="293.0" layoutY="169.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="50.0" style="-fx-background-color: #81A1C1;">
+      <ChoiceBox fx:id="languageDropDown" disable="true" layoutX="293.0" layoutY="169.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="50.0" style="-fx-background-color: #81A1C1;">
          <effect>
             <DropShadow color="#213145" />
          </effect>
@@ -39,7 +39,7 @@
             <Font size="14.0" />
          </font>
       </PasswordField>
-      <Button fx:id="loginButton" layoutX="180.0" layoutY="169.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="50.0" style="-fx-background-color: #81A1C1;" text="Login" textFill="#eceff4">
+      <Button fx:id="loginButton" layoutX="137.0" layoutY="169.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="93.0" style="-fx-background-color: #81A1C1;" text="Login" textFill="#eceff4">
          <effect>
             <DropShadow color="#213145" />
          </effect>

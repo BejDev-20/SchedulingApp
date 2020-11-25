@@ -1,5 +1,7 @@
 package Controller;
 import DAO.DBCache;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,9 +15,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.*;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.*;
 
 /**
  * Responsible for the control of the login form. Provides necessary text field for username and password.
@@ -24,7 +24,7 @@ import java.util.TimeZone;
  */
 public class LoginController {
     @FXML
-    private ChoiceBox<Locale.LanguageRange> languageDropDown;
+    private ChoiceBox<String> languageDropDown;
 
     @FXML
     private TextField usernameTextField;
@@ -73,6 +73,7 @@ public class LoginController {
     @FXML
     public void initialize() {
         logFile = new File("login_activity.txt");
+        setUpLocalization();
         localeLabel.setText(ZoneId.systemDefault().toString());
         loginButton.setOnAction(event -> {
             try {
@@ -80,22 +81,55 @@ public class LoginController {
                 String password = passwordTextField.getText();
                 User user = new User(0, username, password);
                 if (searchForUser(user) != null) {
-                    stage = getStage("../view/MainMenu.fxml", event);
+                    stage = getStage("/view/MainMenu.fxml", event);
                     stage.show();
                 } else {
                     throw new IllegalArgumentException();
                 }
             } catch (IllegalArgumentException ex) {
-                var alert = new Alert(Alert.AlertType.ERROR, "Incorrect user name or password");
-                alert.setTitle("Login Error");
-                alert.setResizable(false);
-                alert.show();
+                showAlert();
             }
         });
 
         exitButton.setOnAction(event -> {
             System.exit(0);
         });
+    }
+
+    /**
+     * Launches the alert if the user notifying the user that incorrect password/username was used. Localizes the
+     * messages to French if needed.
+     */
+    private void showAlert() {
+        var alert = new Alert(Alert.AlertType.ERROR, "Incorrect user name or password");
+        alert.setTitle("Login Error");
+        try {
+            ResourceBundle rb = ResourceBundle.getBundle("Nat", Locale.getDefault());
+            if (Locale.getDefault().getLanguage().contains("fr")){
+                alert.setContentText(rb.getString("Username") + " " + rb.getString("or") + " " +
+                        rb.getString("Password").toLowerCase() + " " + rb.getString("Incorrect"));
+                alert.setTitle(rb.getString("Login") + " " + rb.getString("Error"));
+            }
+        } catch(MissingResourceException ex){}
+        alert.setResizable(false);
+        alert.show();
+    }
+
+    private void setUpLocalization() {
+        try {
+            ObservableList<String> languages = FXCollections.observableArrayList();
+            languages.add("EN");
+            languages.add("FR");
+            languageDropDown.setItems(languages);
+            ResourceBundle rb = ResourceBundle.getBundle("Nat", Locale.getDefault());
+            if (Locale.getDefault().getLanguage().equals("fr")) {
+                languageDropDown.getSelectionModel().select("FR");
+                usernameTextField.setPromptText(rb.getString("Username"));
+                passwordTextField.setPromptText(rb.getString("Password"));
+                loginButton.setText(rb.getString("Password"));
+                exitButton.setText(rb.getString("Exit"));
+            }
+        } catch(MissingResourceException ex){}
     }
 
     /**
